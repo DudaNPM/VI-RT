@@ -15,7 +15,8 @@ int main(int argc, const char * argv[]) {
     Perspective cam(640, 480);  // image resolution
     bool success;
     
-    success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     scene.print();
     
     if (!success) {

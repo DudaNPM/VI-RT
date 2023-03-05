@@ -9,6 +9,7 @@
 #define BB_hpp
 
 #include "vector.hpp"
+#include "ray.hpp"
 
 typedef struct BB {
     Point min, max;
@@ -20,6 +21,8 @@ typedef struct BB {
         if (p.Z < min.Z) min.Z = p.Z;
         else if (p.Z > max.Z) max.Z = p.Z;
     }
+    // retorna true se o raio intersetar a bounding box, false caso contrário
+    bool intersect (Ray ray);
 } BB;
 
 #endif /* AABB_hpp */

@@ -197,7 +197,7 @@ bool Scene::trace (Ray r, Intersection *isect) {
     for (int prim_itr = 0 ; prim_itr < prims.size() ; prim_itr++) {
         auto mesh = dynamic_cast<Mesh *>(prims[prim_itr].g.get());
     
-        if (mesh->intersect(r, &curr_isect)) {
+        if (mesh->intersect(this->vertices, r, &curr_isect)) {
             if (!intersection) { // first intersection
                 intersection = true;
                 *isect = curr_isect;

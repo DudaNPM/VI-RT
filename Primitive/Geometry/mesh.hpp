@@ -25,15 +25,15 @@ typedef struct Face {
 
 class Mesh: public Geometry {
 private:
-    bool TriangleIntersect (Ray r, Face f, Intersection *isect);
+    bool TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Intersection *isect);
 public:
     int numFaces;
     int numVertices;
     int numNormals;
     std::vector<Face> faces;
-    bool intersect (Ray r, Intersection *isect);
+    bool intersect (std::vector<Point> vertices, Ray r, Intersection *isect);
     void updateBBMesh(std::vector<Point> vertices);
-
+    
     Mesh(int numFaces, int numVertices, int numNormals);   
     Mesh(): numFaces(0), numVertices(0), numNormals(0) {}
 };

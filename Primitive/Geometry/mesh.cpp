@@ -23,25 +23,79 @@ void Mesh::updateBBMesh(std::vector<Point> vertices){
         }
     }
 }
+
 // see pbrt book (3rd ed.), sec 3.6.2, pag 157
-bool Mesh::TriangleIntersect (Ray r, Face f, Intersection *isect) {
+// Algorithm explained: https://en.wikipedia.org/wiki/Möller–Trumbore_intersection_algorithm
+bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Intersection *isect) {
+    // intersect the ray with the triangle boundind box
+    if (!face.bb.intersect(r)) return false;
 
+    const float EPSILON = 0.0000001;
+    Vector edge1, edge2, h, s, q;
+    float a,f,u,v;
 
-    return false;
+    // vertices da face/triangulo
+    Point vertex0 = vertices.at(face.vert_ndx[0]);
+    Point vertex1 = vertices.at(face.vert_ndx[1]);
+    Point vertex2 = vertices.at(face.vert_ndx[2]);
+    
+    edge1 = vertex0.vec2point(vertex1);
+    edge2 = vertex0.vec2point(vertex2);
+    h = r.dir.cross(edge2);
+    a = edge1.dot(h);
+    
+    if (a > -EPSILON && a < EPSILON) // a == 0
+        return false;    // This ray is parallel to this triangle.
+    
+    f = 1.0 / a;
+    s = vertex0.vec2point(r.o);
+    u = f * s.dot(h);
+
+    if (u < 0.0 || u > 1.0)
+        return false;
+    
+    q = s.cross(edge1);
+    v = f * r.dir.dot(q);
+
+    if (v < 0.0 || u + v > 1.0)
+        return false;
+    
+    // At this stage we can compute t to find out where the intersection point is on the line.
+    // t é o valor que nos faz "andar" no vetor direção do raio, varia entre 0 e inf
+    // se for negativo significa que o raio esta a ir na direção contrária á do face/triangulo
+    float t = f * edge2.dot(q);
+    if (t > EPSILON) { // ray intersection
+        // Ponto de interseção :: I = ray.o + (ray.dir * t)
+        Vector v = r.dir.operator*(t); 
+        Point intPoint = r.o.operator+(Point(v.X,v.Y,v.Z));
+        
+        // TODO
+        // Guardar info do ponto de interseção
+        isect->p = intPoint;
+        isect->gn = isect->sn = edge1.cross(edge2);
+        // isect->wo = ... // ns o que é
+        isect->depth = t; // not sure mas acho que sim
+        // isect->f = 
+        
+        return true;
+    }
+    else // This means that there is a line intersection but not a ray intersection.
+        return false;
 }
 
-bool Mesh::intersect (Ray r, Intersection *isect) {
+bool Mesh::intersect(std::vector<Point> vertices, Ray r, Intersection *isect) {
     bool intersect = true, intersect_this_face;
     Intersection min_isect, curr_isect;
-    float min_depth=std::numeric_limits<float>::max();
-    // intersect the ray with the mesh BB
+    float min_depth = std::numeric_limits<float>::max();
     
+    // intersect the ray with the mesh BB
+    intersect = this->bb.intersect(r);
     if (!intersect) return false;
     
     // If it intersects then loop through the faces
     intersect = false;
-    for (auto face_it=faces.begin() ; face_it != faces.end() ; face_it++) {
-        intersect_this_face = TriangleIntersect(r, *face_it, &curr_isect);
+    for (auto face_it=faces.begin(); face_it != faces.end(); face_it++) {
+        intersect_this_face = TriangleIntersect(vertices, r, *face_it, &curr_isect);
         if (!intersect_this_face) continue;
         
         intersect = true;
