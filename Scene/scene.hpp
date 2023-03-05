@@ -19,6 +19,8 @@
 
 class Scene {
     int numPrimitives, numLights, numBRDFs;
+    std::vector<Point> vertices;
+    std::vector<Vector> normals;
     std::vector <Primitive> prims;
     std::vector <Light> lights;
     std::vector <BRDF> BRDFs;
@@ -33,6 +35,7 @@ class Scene {
             std::cout << "#lights = " << numLights << " ; ";
             std::cout << "#materials = " << numBRDFs << " ;" << std::endl;
         }
+        void print();
 };
 
 #endif /* Scene_hpp */

@@ -8,6 +8,21 @@
 #include "mesh.hpp"
 #include <limits>
 
+
+Mesh::Mesh(int numFaces, int numVertices, int numNormals){
+    numFaces = numFaces;
+    numVertices = numVertices;
+    numNormals = numNormals;
+}
+
+void Mesh::updateBBMesh(std::vector<Point> vertices){
+    for (auto i = 0; i < faces.size(); ++i){
+        for (auto j = 0; j < 3; ++j){
+            Point p = vertices.at(faces[i].vert_ndx[j]);
+            this->bb.update(p);
+        }
+    }
+}
 // see pbrt book (3rd ed.), sec 3.6.2, pag 157
 bool Mesh::TriangleIntersect (Ray r, Face f, Intersection *isect) {
 

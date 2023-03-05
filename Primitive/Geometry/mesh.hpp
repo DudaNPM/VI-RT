@@ -15,10 +15,10 @@
 // partially inspired in pbrt book (3rd ed.), sec 3.6, pag 152
 
 typedef struct Face {
-    int vert_ndx[3];            // indices to our internal vector of vertices (in Mesh)
+    std::vector<int> vert_ndx;            // indices to our internal vector of vertices (in Mesh)
     Vector geoNormal;           // geometric normal
     bool hasShadingNormals;     // are there per vertex shading normals ??
-    int vert_normals_ndx[3];    // indices to veritices normals
+    std::vector<int> vert_normals_ndx;   // indices to veritices normals
     BB bb;      // face bounding box
                 // this is min={0.,0.,0.} , max={0.,0.,0.} due to the Point constructor
 } Face;
@@ -31,10 +31,10 @@ public:
     int numVertices;
     int numNormals;
     std::vector<Face> faces;
-    std::vector<Point> vertices;
-    std::vector<Vector> normals;
     bool intersect (Ray r, Intersection *isect);
-    
+    void updateBBMesh(std::vector<Point> vertices);
+
+    Mesh(int numFaces, int numVertices, int numNormals);   
     Mesh(): numFaces(0), numVertices(0), numNormals(0) {}
 };
 
