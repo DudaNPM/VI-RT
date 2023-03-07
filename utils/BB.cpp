@@ -14,64 +14,28 @@ using namespace std;
 
 // Algorithm explained: https://www.youtube.com/watch?v=USjbg5QXk3g
 bool BB::intersect (Ray ray) {
-    // f_low e f_high são as frações calculadas até agora
-    float f_low = 0;
-    float f_high = 1;
-
-    // frações da dimensão X/Y/Z em que estivermos a trabalhar
-    float curr_f_low, curr_f_high;
-
-
     // X axis //
-    curr_f_low = (this->min.X - ray.o.X) / ray.dir.X;
-    curr_f_high = (this->max.X - ray.o.X) / ray.dir.X;
-
-    if (curr_f_high < curr_f_low)
-        swap(curr_f_high, curr_f_low);
-    
-    if (curr_f_high < f_low || curr_f_low > f_high)
-        return false;
-
-    f_low = std::max(curr_f_low, f_low);
-    f_high = std::min(curr_f_high, f_high);
-
-    if (f_low > f_high)
-        return false;
-    
+    float tmin = (this->min.X - ray.o.X) / ray.dir.X;
+    float tmax = (this->max.X - ray.o.X) / ray.dir.X;
+    if (tmin > tmax) std::swap(tmin,tmax);
 
     // Y axis //
-    curr_f_low = (this->min.Y - ray.o.Y) / ray.dir.Y;
-    curr_f_high = (this->max.Y - ray.o.Y) / ray.dir.Y;
+    float tymin = (this->min.Y - ray.o.Y) / ray.dir.Y;
+    float tymax = (this->max.Y - ray.o.Y) / ray.dir.Y;
+    if (tymin > tymax) std::swap(tymin, tymax);
 
-    if (curr_f_high < curr_f_low)
-        swap(curr_f_high, curr_f_low);
-    
-    if (curr_f_high < f_low || curr_f_low > f_high)
-        return false;
+    if ((tmin > tymax) || (tymin > tmax)) return false;
 
-    f_low = std::max(curr_f_low, f_low);
-    f_high = std::min(curr_f_high, f_high);
+    if (tymin > tmin) tmin = tymin;
+    if (tymax < tmax) tmax = tymax;
 
-    if (f_low > f_high)
-        return false;
-
-    
     // Z axis //
-    curr_f_low = (this->min.Z - ray.o.Z) / ray.dir.Z;
-    curr_f_high = (this->max.Z - ray.o.Z) / ray.dir.Z;
+    float tzmin = (this->min.Z - ray.o.Z) / ray.dir.Z;
+    float tzmax = (this->max.Z - ray.o.Z) / ray.dir.Z;
 
-    if (curr_f_high < curr_f_low)
-        swap(curr_f_high, curr_f_low);
-    
-    if (curr_f_high < f_low || curr_f_low > f_high)
-        return false;
+    if (tzmin > tzmax) std::swap(tzmin, tzmax);
 
-    f_low = std::max(curr_f_low, f_low);
-    f_high = std::min(curr_f_high, f_high);
+    if ((tmin > tzmax) || (tzmin > tmax)) return false;
 
-    if (f_low > f_high)
-        return false;
-    
-    // Ponto de interseção :: I = ray.o + (ray.dir * f_low)
     return true;
 }

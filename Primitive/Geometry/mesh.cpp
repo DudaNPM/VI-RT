@@ -19,6 +19,7 @@ void Mesh::updateBBMesh(std::vector<Point> vertices){
     for (auto i = 0; i < faces.size(); ++i){
         for (auto j = 0; j < 3; ++j){
             Point p = vertices.at(faces[i].vert_ndx[j]);
+            faces[i].bb.update(p);
             this->bb.update(p);
         }
     }
@@ -30,7 +31,7 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
     // intersect the ray with the triangle boundind box
     if (!face.bb.intersect(r)) return false;
 
-    const float EPSILON = 0.0000001;
+    const float EPSILON = 0.0000001f;
     Vector edge1, edge2, h, s, q;
     float a,f,u,v;
 
@@ -41,13 +42,14 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
     
     edge1 = vertex0.vec2point(vertex1);
     edge2 = vertex0.vec2point(vertex2);
+
     h = r.dir.cross(edge2);
     a = edge1.dot(h);
     
     if (a > -EPSILON && a < EPSILON) // a == 0
         return false;    // This ray is parallel to this triangle.
-    
-    f = 1.0 / a;
+
+    f = (float) 1.0 / a;
     s = vertex0.vec2point(r.o);
     u = f * s.dot(h);
 
@@ -64,6 +66,7 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
     // t é o valor que nos faz "andar" no vetor direção do raio, varia entre 0 e inf
     // se for negativo significa que o raio esta a ir na direção contrária á do face/triangulo
     float t = f * edge2.dot(q);
+    
     if (t > EPSILON) { // ray intersection
         // Ponto de interseção :: I = ray.o + (ray.dir * t)
         Vector v = r.dir.operator*(t); 
@@ -75,7 +78,6 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
         isect->gn = isect->sn = edge1.cross(edge2);
         // isect->wo = ... // ns o que é
         isect->depth = t; // not sure mas acho que sim
-        // isect->f = 
         
         return true;
     }
@@ -85,7 +87,7 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
 
 bool Mesh::intersect(std::vector<Point> vertices, Ray r, Intersection *isect) {
     bool intersect = true, intersect_this_face;
-    Intersection min_isect, curr_isect;
+    Intersection curr_isect;
     float min_depth = std::numeric_limits<float>::max();
     
     // intersect the ray with the mesh BB
@@ -94,15 +96,18 @@ bool Mesh::intersect(std::vector<Point> vertices, Ray r, Intersection *isect) {
     
     // If it intersects then loop through the faces
     intersect = false;
-    for (auto face_it=faces.begin(); face_it != faces.end(); face_it++) {
-        intersect_this_face = TriangleIntersect(vertices, r, *face_it, &curr_isect);
-        if (!intersect_this_face) continue;
+    for (auto face_it = faces.begin(); face_it != faces.end(); face_it++) {
         
-        intersect = true;
-        if (curr_isect.depth < min_depth) {  // this is closer
-            min_depth = curr_isect.depth;
-            min_isect = curr_isect;
+        intersect_this_face = TriangleIntersect(vertices, r, *face_it, &curr_isect);
+        
+        if (intersect_this_face) {
+            intersect = true;
+            if (curr_isect.depth < min_depth) {  // this is closer
+                min_depth = curr_isect.depth;
+                *isect = curr_isect;
+            }
         }
+        
     }
     
     return intersect;

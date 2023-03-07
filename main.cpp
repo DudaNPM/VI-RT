@@ -17,7 +17,12 @@ int main(int argc, const char * argv[]) {
     
     // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
-    scene.print();
+    // scene.print();
+
+    Vector dir (0,10.0,0);
+    Point origin (499.0,-10.0,10.0);
+    Ray ray (origin,dir);
+    Intersection intersection;
     
     if (!success) {
         std::cout << "ERROR!! :o\n";
@@ -25,6 +30,11 @@ int main(int argc, const char * argv[]) {
     }
 
     std::cout << "Scene Load: SUCCESS!! :-)\n";
+
+    scene.trace(ray, &intersection);
+    
+    printf("\nI = x:%f y:%f z:%f\n", intersection.p.X, intersection.p.Y, intersection.p.Z);
+
     // scene.printSummary();
     std::cout << std::endl;
     
