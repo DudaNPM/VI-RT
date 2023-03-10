@@ -82,7 +82,7 @@ bool Scene::Load (const std::string &fname) {
         return false;
     }
     
-    PrintInfo(myObjReader);
+    // PrintInfo(myObjReader);
     const tinyobj::attrib_t attrib = myObjReader.GetAttrib();
     const std::vector<shape_t> shapes = myObjReader.GetShapes();
 
@@ -104,7 +104,7 @@ bool Scene::Load (const std::string &fname) {
         size_t index_offset = 0;        
         int numFaces = 0;
         int numVerticesMesh = static_cast<int>(shapes[s].mesh.indices.size()) / 3;
-        std::cout << "numVerticesMesh = " << numVerticesMesh << std::endl;
+        // std::cout << "numVerticesMesh = " << numVerticesMesh << std::endl;
         int numNormals = 0;
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(numFaces, numVerticesMesh, numNormals);
         Primitive primitive;
@@ -114,19 +114,18 @@ bool Scene::Load (const std::string &fname) {
         for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++){
             numFaces++;
             Face face;
-            std :: cout << "FACE " << face.vert_ndx.size() << std::endl;
+            // std :: cout << "FACE " << face.vert_ndx.size() << std::endl;
             size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
             material_id = shapes[s].mesh.material_ids[f];
             
             for (size_t v = 0; v < fv; v++) {
                 tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-                std :: cout << " IDX VERT --- " << idx.vertex_index <<std::endl;
+                // std :: cout << " IDX VERT --- " << idx.vertex_index <<std::endl;
                 
                 tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
                 tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
                 tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
                 Point p(static_cast<float>(vx), static_cast<float>(vy), static_cast<float>(vz));
-                //face.bb.update(p);
 
                 face.vert_ndx.push_back(idx.vertex_index);
                 
@@ -135,8 +134,9 @@ bool Scene::Load (const std::string &fname) {
                     face.vert_normals_ndx.push_back(idx.normal_index);
                 }
             }
-            for (int o = 0; o < 3; ++o)
-                std::cout << "FACE INSIDE FACE " << face.vert_ndx.at(o) <<std::endl;
+
+            // for (int o = 0; o < 3; ++o)
+            //     std::cout << "FACE INSIDE FACE " << face.vert_ndx.at(o) <<std::endl;
                   
             Point p0 = vertices.at(face.vert_ndx[0]);
             Point p1 = vertices.at(face.vert_ndx[1]);
@@ -150,7 +150,7 @@ bool Scene::Load (const std::string &fname) {
             face.hasShadingNormals = numNormals != 0 ? true : false;
  
             mesh->faces.push_back(face);
-            std::cout << "FACE INSIDE " << face.hasShadingNormals <<std::endl;
+            // std::cout << "FACE INSIDE " << face.hasShadingNormals <<std::endl;
             
             index_offset += fv;
         }
@@ -177,11 +177,7 @@ void Scene::print(){
                 Point p =  this->vertices.at(mesh->faces[j].vert_ndx[z]);
                 std::cout << "#VERT X  = " << p.X << " ; ";
             }
-                
-
         }
-        
-
     }
 }
 

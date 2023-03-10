@@ -6,7 +6,7 @@
 //
 
 #ifndef AABB_hpp
-#define AABB_hpps
+#define AABB_hpp
 
 #include "vector.hpp"
 #include "ray.hpp"
