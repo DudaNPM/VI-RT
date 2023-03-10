@@ -8,7 +8,7 @@
 #ifndef geometry_hpp
 #define geometry_hpp
 
-#include "BB.hpp"
+#include "AABB.hpp"
 #include "ray.hpp"
 #include "intersection.hpp"
 

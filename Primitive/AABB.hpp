@@ -5,8 +5,8 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
-#ifndef BB_hpp
-#define BB_hpp
+#ifndef AABB_hpp
+#define AABB_hpps
 
 #include "vector.hpp"
 #include "ray.hpp"

@@ -5,7 +5,7 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
-#include "BB.hpp"
+#include "AABB.hpp"
 
 #include <utility>
 #include <algorithm>
