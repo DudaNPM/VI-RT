@@ -10,9 +10,9 @@
 
 
 Mesh::Mesh(int numFaces, int numVertices, int numNormals){
-    numFaces = numFaces;
-    numVertices = numVertices;
-    numNormals = numNormals;
+    this->numFaces = numFaces;
+    this->numVertices = numVertices;
+    this->numNormals = numNormals;
 }
 
 void Mesh::updateBBMesh(std::vector<Point> vertices){

@@ -8,16 +8,25 @@
 #include "AABB.hpp"
 
 #include <utility>
+#include <limits>
 #include <algorithm>
 
 using namespace std;
 
 // Algorithm explained: https://www.youtube.com/watch?v=USjbg5QXk3g
 bool BB::intersect (Ray ray) {
+    float tmin = 0;
+    float tmax = std::numeric_limits<float>::infinity();
+    
     // X axis //
-    float tmin = (this->min.X - ray.o.X) / ray.dir.X;
-    float tmax = (this->max.X - ray.o.X) / ray.dir.X;
-    if (tmin > tmax) std::swap(tmin,tmax);
+    float txmin = (this->min.X - ray.o.X) / ray.dir.X;
+    float txmax = (this->max.X - ray.o.X) / ray.dir.X;
+    if (txmin > txmax) std::swap(txmin, txmax);
+
+    if ((tmin > txmax) || (txmin > tmax)) return false;
+
+    if (txmin > tmin) tmin = txmin;
+    if (txmax < tmax) tmax = txmax;
 
     // Y axis //
     float tymin = (this->min.Y - ray.o.Y) / ray.dir.Y;

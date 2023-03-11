@@ -85,6 +85,7 @@ bool Scene::Load (const std::string &fname) {
     // PrintInfo(myObjReader);
     const tinyobj::attrib_t attrib = myObjReader.GetAttrib();
     const std::vector<shape_t> shapes = myObjReader.GetShapes();
+    const std::vector<material_t> materials = myObjReader.GetMaterials();
 
     
     std::vector<Face> faces;
@@ -162,6 +163,19 @@ bool Scene::Load (const std::string &fname) {
         prims.push_back(primitive);
     }
 
+
+    for(auto& material : materials) {
+
+        RGB Ka = RGB(material.ambient[0], material.ambient[1], material.ambient[2]);
+        RGB Kd = RGB(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
+        RGB Ks = RGB(material.specular[0], material.specular[1], material.specular[2]);
+        RGB Kt = RGB(material.transmittance[0], material.transmittance[1], material.transmittance[2]);
+        float Ns = material.shininess;
+
+        this->BRDFs.push_back(Phong(Ka, Kd, Ks, Kt, Ns));
+        this->numBRDFs++;
+    }
+
     return true;
 }
 
@@ -197,7 +211,7 @@ bool Scene::trace (Ray r, Intersection *isect) {
             if (!intersection) { // first intersection
                 intersection = true;
                 *isect = curr_isect;
-                // isect->f = &BRDFs[prims[prim_itr].material_ndx];
+                isect->f = &BRDFs[prims[prim_itr].material_ndx];
             }
             else if (curr_isect.depth < isect->depth) {
                 *isect = curr_isect;

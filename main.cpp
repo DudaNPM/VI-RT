@@ -18,7 +18,8 @@ int main(int argc, const char * argv[]) {
     bool success;
     
     // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
-    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    //success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // scene.print();
     
     if (!success) {
@@ -37,8 +38,8 @@ int main(int argc, const char * argv[]) {
     img = new ImagePPM(W,H);
 
     // Camera parameters
-    const Point Eye = {0,0,0};
-    const Point At = {0,0,1};
+    const Point Eye = {343,560,227};
+    const Point At = {343,550,227};
     const Vector Up = {0,1,0};
     const float fovW = 3.14f/3.f;
     const float fovH = 3.14f/3.f;

@@ -1,8 +1,8 @@
-C:/Users/duart/Desktop/VI/VI-RT/build/CMakeFiles/renderer.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/CMakeFiles/INSTALL.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/tinyobjloader.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/uninstall.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/INSTALL.dir
-C:/Users/duart/Desktop/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/ALL_BUILD.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/CMakeFiles/renderer.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/CMakeFiles/INSTALL.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/tinyobjloader.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/uninstall.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/INSTALL.dir
+C:/Users/User/Desktop/CG/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/ALL_BUILD.dir

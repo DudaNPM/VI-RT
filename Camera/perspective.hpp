@@ -19,10 +19,10 @@ class Perspective: public Camera {
     int W, H;
     float c2w[3][3];  // camera 2 world transform
 public:
-    Perspective (const Point Eye, const Point At, const Vector Up, const int W, const int H, const float fovW, const float fovH): Eye(Eye), At(At), Up(Up), W(W), H(H), fovW(fovW), fovH(fovH)  {
+    Perspective (const Point Eye, const Point At, Vector Up, const int W, const int H, const float fovW, const float fovH): Eye(Eye), At(At), Up(Up), W(W), H(H), fovW(fovW), fovH(fovH)  {
         // compute camera 2 world transform
         Vector F (At.X-Eye.X,At.Y-Eye.Y,At.Z-Eye.Z);
-        Vector R = F.cross(Up);
+        Vector R = Up.cross(F);
 
         F.normalize();
         R.normalize();
