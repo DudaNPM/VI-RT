@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\User\Desktop\CG\VI\VI-RT\Scene\tinyobjloader\tiny_obj_loader.cc">
+    <ClCompile Include="C:\Users\duart\Desktop\VI\VI-RT\Scene\tinyobjloader\tiny_obj_loader.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\User\Desktop\CG\VI\VI-RT\Scene\tinyobjloader\tiny_obj_loader.h">
+    <ClInclude Include="C:\Users\duart\Desktop\VI\VI-RT\Scene\tinyobjloader\tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\User\Desktop\CG\VI\VI-RT\Scene\tinyobjloader\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\duart\Desktop\VI\VI-RT\Scene\tinyobjloader\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{22EFFF46-E090-32B3-B904-66ADC32A0268}</UniqueIdentifier>
+      <UniqueIdentifier>{82DF88AC-C9F4-3B58-8A0D-49E4F90BF58B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{ADB17453-7AE6-3F75-BABD-82AE634CD493}</UniqueIdentifier>
+      <UniqueIdentifier>{EC566E97-C809-35C6-9698-283F62A42DCD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

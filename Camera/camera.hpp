@@ -15,9 +15,8 @@ class Camera {
 public:
     Camera () {}
     ~Camera() {}
-    //bool GenerateRay() {return false;};
     bool virtual GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter=NULL) {return false;};
-    virtual void getResolution (int *_W, int *_H) {};
+    virtual void getResolution (int *_W, int *_H) {*_W=0; *_H=0;};
 };
 
 #endif /* camera_hpp */

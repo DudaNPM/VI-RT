@@ -9,17 +9,21 @@
 #include "scene.hpp"
 #include "perspective.hpp"
 #include "renderer.hpp"
+#include "StandardRenderer.hpp"
 #include "ImagePPM.hpp"
+#include "AmbientShader.hpp"
+#include "AmbientLight.hpp"
 
 int main(int argc, const char * argv[]) {
     Scene scene;
     Perspective *cam; // Camera
     ImagePPM *img;    // Image
+    Shader *shd;
     bool success;
     
     // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
-    //success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
-    success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    // success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // scene.print();
     
     if (!success) {
@@ -30,6 +34,11 @@ int main(int argc, const char * argv[]) {
     std::cout << "Scene Load: SUCCESS!! :-)\n";
     scene.printSummary();
     // std::cout << std::endl;
+
+    // add an ambient light to the scene
+    AmbientLight ambient(RGB(0.9f,0.9f,0.9f));
+    scene.lights.push_back(ambient);
+    scene.numLights++;
     
     // Image resolution
     const int W = 640;
@@ -38,15 +47,18 @@ int main(int argc, const char * argv[]) {
     img = new ImagePPM(W,H);
 
     // Camera parameters
-    const Point Eye = {343,560,227};
-    const Point At = {343,550,227};
+    const Point Eye = {0,1000,0};
+    const Point At = {0,0,0};
     const Vector Up = {0,1,0};
     const float fovW = 3.14f/3.f;
     const float fovH = 3.14f/3.f;
     cam = new Perspective(Eye, At, Up, W, H, fovW, fovH);
     
+    // create the shader
+    RGB background(0.05f, 0.05f, 0.55f);
+    shd = new AmbientShader(&scene, background);
     // declare the renderer
-    Renderer myRender (cam, &scene, img);
+    StandardRenderer myRender (cam, &scene, img, shd);
     // render
     myRender.Render();
     // save the image

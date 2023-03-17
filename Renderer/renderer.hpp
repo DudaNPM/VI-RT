@@ -11,6 +11,7 @@
 #include "camera.hpp"
 #include "scene.hpp"
 #include "image.hpp"
+#include "shader.hpp"
 #include <iostream>
 
 class Renderer {
@@ -18,34 +19,10 @@ protected:
     Camera *cam;
     Scene *scene;
     Image * img;
+    Shader *shd;
 public:
-    Renderer (Camera *cam, Scene * scene, Image * img): cam(cam), scene(scene), img(img) {}
-    void Render () {
-        int W, H;
-        cam->getResolution(&W, &H);
-
-
-        Ray ray;
-
-        for (int i = 0; i < W; i++) {
-            for (int j = 0; j < H; j++) {
-                if (cam->GenerateRay(i, j, &ray))
-                    img->set(i, j, this->rad(ray));
-            }
-        }
-    }
-
-    RGB rad (Ray ray) {
-        Intersection isect;
-        if (scene->trace(ray, &isect))
-            return this->shade(ray, isect);
-
-        return RGB(0,0,0);
-    }
-
-    RGB shade(Ray ray, Intersection isect) {
-        return RGB(1,1,1); // change later
-    }
+    Renderer (Camera *cam, Scene * scene, Image * img, Shader *shd): cam(cam), scene(scene), img(img), shd(shd) {}
+    virtual void Render () {}
 };
 
 #endif /* renderer_hpp */

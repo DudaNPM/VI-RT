@@ -35,6 +35,7 @@ bool ImagePPM::Save (std::string filename) {
         if (ofs.fail()) throw("Can't open output file");
         ofs << "P6\n" << W << " " << H << "\n255\n";
         unsigned char r, g, b;
+        
         for (int j = 0 ; j< H ; j++) {
             for (int i = 0; i < W ; ++i) {
                 r = imageToSave[j*W+i].val[0];
@@ -43,6 +44,7 @@ bool ImagePPM::Save (std::string filename) {
                 ofs << r << g << b;
             }
         }
+        
         ofs.close();
     }
     catch (const char *err) {

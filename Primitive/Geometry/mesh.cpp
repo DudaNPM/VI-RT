@@ -76,8 +76,8 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
         // Guardar info do ponto de interseção
         isect->p = intPoint;
         isect->gn = isect->sn = edge1.cross(edge2);
-        // isect->wo = ... // ns o que é
-        isect->depth = t; // not sure mas acho que sim
+        isect->wo = (Vector(0,0,0)).operator-(r.dir); // 0 - dir = -dir
+        isect->depth = t;
         
         return true;
     }

@@ -1,6 +1,6 @@
-^C:\USERS\USER\DESKTOP\CG\VI\VI-RT\SCENE\TINYOBJLOADER\CMAKELISTS.TXT
+^C:\USERS\DUART\DESKTOP\VI\VI-RT\SCENE\TINYOBJLOADER\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/User/Desktop/CG/VI/VI-RT -BC:/Users/User/Desktop/CG/VI/VI-RT/build --check-stamp-file C:/Users/User/Desktop/CG/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/duart/Desktop/VI/VI-RT -BC:/Users/duart/Desktop/VI/VI-RT/build --check-stamp-file C:/Users/duart/Desktop/VI/VI-RT/build/Scene/tinyobjloader/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

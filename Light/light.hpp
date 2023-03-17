@@ -13,6 +13,8 @@
 
 class Light {
 public:
+    bool isAmbient;
+    
     Light () {}
     ~Light () {}
     // return the Light RGB radiance for a given point : p

@@ -17,7 +17,7 @@ public:
     float Ns;
 
 
-    Phong(RGB Ka, RGB Kd, RGB Ks, RGB Kt, float Ns); 
+    Phong(RGB Ka, RGB Kd, RGB Ks, RGB Kt, float Ns);
 };
 
 #endif /* Phong_hpp */

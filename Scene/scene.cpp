@@ -172,7 +172,8 @@ bool Scene::Load (const std::string &fname) {
         RGB Kt = RGB(material.transmittance[0], material.transmittance[1], material.transmittance[2]);
         float Ns = material.shininess;
 
-        this->BRDFs.push_back(Phong(Ka, Kd, Ks, Kt, Ns));
+        auto phong = std::make_shared<Phong>(Ka, Kd, Ks, Kt, Ns);
+        this->BRDFs.push_back(phong);
         this->numBRDFs++;
     }
 
@@ -205,13 +206,14 @@ bool Scene::trace (Ray r, Intersection *isect) {
     
     // iterate over all primitives
     for (int prim_itr = 0 ; prim_itr < prims.size() ; prim_itr++) {
-        auto mesh = dynamic_cast<Mesh *>(prims[prim_itr].g.get());
+        auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());
+        
     
         if (mesh->intersect(this->vertices, r, &curr_isect)) {
             if (!intersection) { // first intersection
                 intersection = true;
                 *isect = curr_isect;
-                isect->f = &BRDFs[prims[prim_itr].material_ndx];
+                isect->f = BRDFs[prims[prim_itr].material_ndx].get();
             }
             else if (curr_isect.depth < isect->depth) {
                 *isect = curr_isect;

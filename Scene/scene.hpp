@@ -18,24 +18,25 @@
 #include "BRDF.hpp"
 
 class Scene {
-    int numPrimitives, numLights, numBRDFs;
+private:
     std::vector<Point> vertices;
     std::vector<Vector> normals;
     std::vector <Primitive> prims;
+    std::vector <std::shared_ptr<BRDF>> BRDFs;
+public:
     std::vector <Light> lights;
-    std::vector <BRDF> BRDFs;
+    int numPrimitives, numLights, numBRDFs;
     
-    public:
-        Scene (): numPrimitives(0), numLights(0), numBRDFs(0) {}
-        bool Load (const std::string &fname);
-        bool SetLights (void) { return true; };
-        bool trace (Ray r, Intersection *isect);
-        void printSummary(void) {
-            std::cout << "#primitives = " << numPrimitives << " ; ";
-            std::cout << "#lights = " << numLights << " ; ";
-            std::cout << "#materials = " << numBRDFs << " ;" << std::endl;
-        }
-        void print();
+    Scene (): numPrimitives(0), numLights(0), numBRDFs(0) {}
+    bool Load (const std::string &fname);
+    bool SetLights (void) { return true; };
+    bool trace (Ray r, Intersection *isect);
+    void printSummary(void) {
+        std::cout << "#primitives = " << numPrimitives << " ; ";
+        std::cout << "#lights = " << numLights << " ; ";
+        std::cout << "#materials = " << numBRDFs << " ;" << std::endl;
+    }
+    void print();
 };
 
 #endif /* Scene_hpp */

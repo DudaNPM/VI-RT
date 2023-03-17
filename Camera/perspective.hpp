@@ -11,6 +11,7 @@
 #include "camera.hpp"
 #include "ray.hpp"
 #include "vector.hpp"
+#include <iostream>
 
 class Perspective: public Camera {
     Point Eye, At;
@@ -22,10 +23,23 @@ public:
     Perspective (const Point Eye, const Point At, Vector Up, const int W, const int H, const float fovW, const float fovH): Eye(Eye), At(At), Up(Up), W(W), H(H), fovW(fovW), fovH(fovH)  {
         // compute camera 2 world transform
         Vector F (At.X-Eye.X,At.Y-Eye.Y,At.Z-Eye.Z);
-        Vector R = Up.cross(F);
-
         F.normalize();
+        
+        Vector R = F.cross(Up);
         R.normalize();
+
+        std::cout << "este e o F" << std::endl;
+        std::cout << F.X << std::endl;
+        std::cout << F.Y << std::endl;
+        std::cout << F.Z << std::endl;
+        std::cout << "este e o Up" << std::endl;
+        std::cout << Up.X << std::endl;
+        std::cout << Up.Y << std::endl;
+        std::cout << Up.Z << std::endl;
+        std::cout << "este e o R" << std::endl;
+        std::cout << R.X << std::endl;
+        std::cout << R.Y << std::endl;
+        std::cout << R.Z << std::endl;
 
         c2w[0][0] = R.X;
         c2w[0][1] = R.Y;

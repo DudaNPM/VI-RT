@@ -1,31 +1,13 @@
 ﻿  Building Custom Rule C:/Users/duart/Desktop/VI/VI-RT/CMakeLists.txt
   perspective.cpp
-C:\Users\duart\Desktop\VI\VI-RT\utils\RGB.hpp(25,37): warning C4244: 'return': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(55,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(54,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(53,35): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+C:\Users\duart\Desktop\VI\VI-RT\Camera\perspective.cpp(11,14): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+C:\Users\duart\Desktop\VI\VI-RT\Camera\perspective.cpp(12,14): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
+  ImagePPM.cpp
   Phong.cpp
-C:\Users\duart\Desktop\VI\VI-RT\utils\RGB.hpp(25,37): warning C4244: 'return': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(55,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(54,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(53,35): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
   mesh.cpp
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(55,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(54,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(53,35): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\RGB.hpp(25,37): warning C4244: 'return': conversão de 'double' para 'float', possível perda de dados
   scene.cpp
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(55,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(54,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(53,35): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\RGB.hpp(25,37): warning C4244: 'return': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\Scene\scene.cpp(52,16): warning C4477: 'printf': a cadeia de formato '%lu' requer um argumento do tipo 'unsigned long', mas um argumento variadic 1 tem o tipo 'unsigned __int64'
-C:\Users\duart\Desktop\VI\VI-RT\Scene\scene.cpp(52,16): message : considere usar '%zu' na cadeia de formato
+C:\Users\duart\Desktop\VI\VI-RT\Scene\scene.cpp(100,34): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
   main.cpp
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(55,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(54,21): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\vector.hpp(53,35): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-C:\Users\duart\Desktop\VI\VI-RT\utils\RGB.hpp(25,37): warning C4244: 'return': conversão de 'double' para 'float', possível perda de dados
   AABB.cpp
   Gerando Código...
   renderer.vcxproj -> C:\Users\duart\Desktop\VI\VI-RT\build\Debug\renderer.exe
