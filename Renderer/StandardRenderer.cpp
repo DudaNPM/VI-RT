@@ -26,11 +26,14 @@ void StandardRenderer::Render () {
             // Generate Ray (camera)
             this->cam->GenerateRay(x,y,&primary);
 
-            if (x==W/2 && y == H/2) {
+            if (x==0 && y == 0) {
                 std::cout << "este e o dir" << std::endl;
                 std::cout << primary.dir.X << std::endl;
                 std::cout << primary.dir.Y << std::endl;
                 std::cout << primary.dir.Z << std::endl;
+                std::cout << primary.o.X << std::endl;
+                std::cout << primary.o.Y << std::endl;
+                std::cout << primary.o.Z << std::endl;
             }
             
             // trace ray (scene)
@@ -38,6 +41,8 @@ void StandardRenderer::Render () {
 
             // shade this intersection (shader)
             color = this->shd->shade(intersected, isect);
+
+
 
             // write the result into the image frame buffer (image)
             img->set(x,y,color);

@@ -24,7 +24,7 @@ private:
     std::vector <Primitive> prims;
     std::vector <std::shared_ptr<BRDF>> BRDFs;
 public:
-    std::vector <Light> lights;
+    std::vector <Light *> lights;
     int numPrimitives, numLights, numBRDFs;
     
     Scene (): numPrimitives(0), numLights(0), numBRDFs(0) {}

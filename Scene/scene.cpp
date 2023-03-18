@@ -158,7 +158,7 @@ bool Scene::Load (const std::string &fname) {
         mesh->numFaces = numFaces;
         mesh->updateBBMesh(this->vertices); 
 
-        primitive.g = std::move(mesh);
+        primitive.g = mesh;
         primitive.material_ndx = material_id;
         prims.push_back(primitive);
     }
@@ -204,20 +204,23 @@ bool Scene::trace (Ray r, Intersection *isect) {
     
     if (numPrimitives==0) return false;
     
-    // iterate over all primitives
-    for (int prim_itr = 0 ; prim_itr < prims.size() ; prim_itr++) {
-        auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());
-        
     
+    // iterate over all primitives
+    for (auto prim_itr = 0 ; prim_itr < prims.size() ; prim_itr++) {
+        auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());    
         if (mesh->intersect(this->vertices, r, &curr_isect)) {
             if (!intersection) { // first intersection
                 intersection = true;
-                *isect = curr_isect;
+                *isect = curr_isect;         
                 isect->f = BRDFs[prims[prim_itr].material_ndx].get();
+                    auto f = static_cast<Phong *> (isect->f);
             }
             else if (curr_isect.depth < isect->depth) {
                 *isect = curr_isect;
+                isect->f = BRDFs[prims[prim_itr].material_ndx].get();
             }
+            
+      
         }
     }
     return intersection;

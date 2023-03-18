@@ -21,8 +21,8 @@ int main(int argc, const char * argv[]) {
     Shader *shd;
     bool success;
     
-    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
-    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cube.obj");
+   // success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // scene.print();
     
@@ -32,13 +32,15 @@ int main(int argc, const char * argv[]) {
     }
 
     std::cout << "Scene Load: SUCCESS!! :-)\n";
-    scene.printSummary();
+
     // std::cout << std::endl;
 
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.9f,0.9f,0.9f));
-    scene.lights.push_back(ambient);
+    AmbientLight ambient(RGB(0.5f,0.5f,0.5f));
+    scene.lights.push_back(&ambient);
     scene.numLights++;
+
+    scene.printSummary();
     
     // Image resolution
     const int W = 640;
@@ -47,8 +49,8 @@ int main(int argc, const char * argv[]) {
     img = new ImagePPM(W,H);
 
     // Camera parameters
-    const Point Eye = {0,1000,0};
-    const Point At = {0,0,0};
+    const Point Eye = {-4,1,2};
+    const Point At = {0,1,2};
     const Vector Up = {0,1,0};
     const float fovW = 3.14f/3.f;
     const float fovH = 3.14f/3.f;

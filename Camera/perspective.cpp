@@ -14,10 +14,12 @@ bool Perspective::GenerateRay(const int x, const int y, Ray *r, const float *cam
     float xc = xs * tan(this->fovW / 2.0f);
     float yc = ys * tan(this->fovH / 2.0f);
 
-    r->o = this->Eye;
-    r->dir = Vector(this->c2w[0][0] * xc + this->c2w[0][1] * yc + this->c2w[0][2] * 1,
-                    this->c2w[1][0] * xc + this->c2w[1][1] * yc + this->c2w[1][2] * 1,
-                    this->c2w[2][0] * xc + this->c2w[2][1] * yc + this->c2w[2][2] * 1);
+    r->o =  this->Eye;
+
+    auto pixelToWorld = Point(this->c2w[0][0] * xc  + this->c2w[0][1] * yc + this->c2w[0][2] *  1 ,
+                    this->c2w[1][0] * xc  + this->c2w[1][1] * yc + this->c2w[1][2] *  1 ,
+                    this->c2w[2][0] * xc  + this->c2w[2][1] * yc + this->c2w[2][2] *  1);
+    r->dir = this->Eye.vec2point(pixelToWorld);
 
     return true;
 }
