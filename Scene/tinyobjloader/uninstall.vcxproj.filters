@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\uncha\Documents\Masters\VI\Project\VI-RT\CMakeFiles\7ca9e634cef6cf3d9563c31e7e64db8d\uninstall.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\uncha\Documents\Masters\VI\Project\VI-RT\Scene\tinyobjloader\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\uncha\Documents\Masters\VI\Project\VI-RT\Scene\tinyobjloader\CMakeFiles\uninstall" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{90640F8A-C17D-3969-9455-B0D82819204D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
