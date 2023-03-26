@@ -28,19 +28,6 @@ public:
         Vector R = F.cross(Up);
         R.normalize();
 
-        std::cout << "este e o F" << std::endl;
-        std::cout << F.X << std::endl;
-        std::cout << F.Y << std::endl;
-        std::cout << F.Z << std::endl;
-        std::cout << "este e o Up" << std::endl;
-        std::cout << Up.X << std::endl;
-        std::cout << Up.Y << std::endl;
-        std::cout << Up.Z << std::endl;
-        std::cout << "este e o R" << std::endl;
-        std::cout << R.X << std::endl;
-        std::cout << R.Y << std::endl;
-        std::cout << R.Z << std::endl;
-
         c2w[0][0] = R.X;
         c2w[0][1] = R.Y;
         c2w[0][2] = R.Z;

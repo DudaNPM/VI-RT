@@ -213,7 +213,7 @@ bool Scene::trace (Ray r, Intersection *isect) {
                 intersection = true;
                 *isect = curr_isect;         
                 isect->f = BRDFs[prims[prim_itr].material_ndx].get();
-                    auto f = static_cast<Phong *> (isect->f);
+                // auto f = static_cast<Phong *> (isect->f);
             }
             else if (curr_isect.depth < isect->depth) {
                 *isect = curr_isect;

@@ -21,8 +21,8 @@ int main(int argc, const char * argv[]) {
     Shader *shd;
     bool success;
     
-    success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cube.obj");
-   // success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cube.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // scene.print();
     
@@ -43,17 +43,17 @@ int main(int argc, const char * argv[]) {
     scene.printSummary();
     
     // Image resolution
-    const int W = 640;
-    const int H = 480;
+    const int W = 1024;
+    const int H = 1024;
 
     img = new ImagePPM(W,H);
 
     // Camera parameters
-    const Point Eye = {-4,1,2};
-    const Point At = {0,1,2};
+    const Point Eye = {280,275,-330};
+    const Point At = {280,265,0};
     const Vector Up = {0,1,0};
-    const float fovW = 3.14f/3.f;
-    const float fovH = 3.14f/3.f;
+    const float fovW = 3.1415f / 2.0f;
+    const float fovH = fovW * H/W;
     cam = new Perspective(Eye, At, Up, W, H, fovW, fovH);
     
     // create the shader

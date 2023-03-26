@@ -25,16 +25,6 @@ void StandardRenderer::Render () {
           
             // Generate Ray (camera)
             this->cam->GenerateRay(x,y,&primary);
-
-            if (x==0 && y == 0) {
-                std::cout << "este e o dir" << std::endl;
-                std::cout << primary.dir.X << std::endl;
-                std::cout << primary.dir.Y << std::endl;
-                std::cout << primary.dir.Z << std::endl;
-                std::cout << primary.o.X << std::endl;
-                std::cout << primary.o.Y << std::endl;
-                std::cout << primary.o.Z << std::endl;
-            }
             
             // trace ray (scene)
             intersected = this->scene->trace(primary, &isect);
