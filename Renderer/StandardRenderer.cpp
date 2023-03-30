@@ -32,11 +32,8 @@ void StandardRenderer::Render () {
             // shade this intersection (shader)
             color = this->shd->shade(intersected, isect);
 
-
-
             // write the result into the image frame buffer (image)
             img->set(x,y,color);
-            
-        } // loop over columns
-    }   // loop over rows
+        }
+    }
 }

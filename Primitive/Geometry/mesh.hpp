@@ -15,7 +15,7 @@
 // partially inspired in pbrt book (3rd ed.), sec 3.6, pag 152
 
 typedef struct Face {
-    std::vector<int> vert_ndx;            // indices to our internal vector of vertices (in Mesh)
+    std::vector<int> vert_ndx;  // indices to our internal vector of vertices (in Mesh)
     Vector geoNormal;           // geometric normal
     bool hasShadingNormals;     // are there per vertex shading normals ??
     std::vector<int> vert_normals_ndx;   // indices to veritices normals

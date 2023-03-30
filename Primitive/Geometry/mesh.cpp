@@ -107,7 +107,6 @@ bool Mesh::intersect(std::vector<Point> vertices, Ray r, Intersection *isect) {
                 *isect = curr_isect;
             }
         }
-        
     }
     
     return intersect;

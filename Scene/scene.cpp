@@ -19,6 +19,8 @@
 
 using namespace tinyobj;
 
+
+
 static void PrintInfo (const ObjReader myObj) {
 
     const tinyobj::attrib_t attrib = myObj.GetAttrib();
@@ -47,11 +49,9 @@ static void PrintInfo (const ObjReader myObj) {
     }
     // iterate shapes
     auto it_shape = shapes.begin();
-    
     for (; it_shape != shapes.end(); it_shape++) {
         // assume each face has 3 vertices
         std::cout << "Processing shape " << it_shape->name << std::endl;
-        
         
         // iterate faces
         auto it_vertex = it_shape->mesh.indices.begin();
@@ -64,11 +64,11 @@ static void PrintInfo (const ObjReader myObj) {
             }
             std::cout << std::endl;
         }
-
         std::cout << "There are " << it_shape->mesh.material_ids.size() << " material indexes\n" << std::endl;
     }
-    
 }
+
+
 
 /*
  Use tiny load to load .obj scene descriptions
@@ -87,9 +87,6 @@ bool Scene::Load (const std::string &fname) {
     const std::vector<shape_t> shapes = myObjReader.GetShapes();
     const std::vector<material_t> materials = myObjReader.GetMaterials();
 
-    
-    std::vector<Face> faces;
-    std::vector<Vector> normals;
 
     for (size_t i = 0; i < attrib.vertices.size() / 3; ++i){
         this->vertices.push_back(Point(attrib.vertices[3 * i], attrib.vertices[3 * i + 1], attrib.vertices[3 * i + 2]));
@@ -97,37 +94,25 @@ bool Scene::Load (const std::string &fname) {
     for (size_t i = 0; i < attrib.normals.size() / 3; ++i){
         this->normals.push_back(Vector(attrib.normals[3 * i], attrib.normals[3 * i + 1], attrib.normals[3 * i + 2]));
     }
-    numPrimitives = shapes.size();
 
-
-    for (size_t s = 0; s < shapes.size(); s++){
-
+    this->numPrimitives = shapes.size();
+    for (size_t s = 0; s < this->numPrimitives; s++){
         size_t index_offset = 0;        
         int numFaces = 0;
         int numVerticesMesh = static_cast<int>(shapes[s].mesh.indices.size()) / 3;
-        // std::cout << "numVerticesMesh = " << numVerticesMesh << std::endl;
         int numNormals = 0;
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(numFaces, numVerticesMesh, numNormals);
         Primitive primitive;
         int material_id;
 
-
         for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++){
             numFaces++;
             Face face;
-            // std :: cout << "FACE " << face.vert_ndx.size() << std::endl;
             size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
             material_id = shapes[s].mesh.material_ids[f];
             
             for (size_t v = 0; v < fv; v++) {
                 tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-                // std :: cout << " IDX VERT --- " << idx.vertex_index <<std::endl;
-                
-                tinyobj::real_t vx = attrib.vertices[3*size_t(idx.vertex_index)+0];
-                tinyobj::real_t vy = attrib.vertices[3*size_t(idx.vertex_index)+1];
-                tinyobj::real_t vz = attrib.vertices[3*size_t(idx.vertex_index)+2];
-                Point p(static_cast<float>(vx), static_cast<float>(vy), static_cast<float>(vz));
-
                 face.vert_ndx.push_back(idx.vertex_index);
                 
                 if (idx.normal_index >= 0) {
@@ -135,37 +120,30 @@ bool Scene::Load (const std::string &fname) {
                     face.vert_normals_ndx.push_back(idx.normal_index);
                 }
             }
-
-            // for (int o = 0; o < 3; ++o)
-            //     std::cout << "FACE INSIDE FACE " << face.vert_ndx.at(o) <<std::endl;
                   
             Point p0 = vertices.at(face.vert_ndx[0]);
             Point p1 = vertices.at(face.vert_ndx[1]);
             Point p2 = vertices.at(face.vert_ndx[2]);
             Vector e0 = p0.vec2point(p1);
             Vector e1 = p0.vec2point(p2);
-
             Vector gn = e0.cross(e1);
-            face.geoNormal = gn;
 
+            face.geoNormal = gn;
             face.hasShadingNormals = numNormals != 0 ? true : false;
- 
             mesh->faces.push_back(face);
-            // std::cout << "FACE INSIDE " << face.hasShadingNormals <<std::endl;
-            
             index_offset += fv;
         }
+
         mesh->numFaces = numFaces;
         mesh->updateBBMesh(this->vertices); 
 
         primitive.g = mesh;
         primitive.material_ndx = material_id;
-        prims.push_back(primitive);
+        this->prims.push_back(primitive);
     }
 
 
     for(auto& material : materials) {
-
         RGB Ka = RGB(material.ambient[0], material.ambient[1], material.ambient[2]);
         RGB Kd = RGB(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
         RGB Ks = RGB(material.specular[0], material.specular[1], material.specular[2]);
@@ -179,6 +157,8 @@ bool Scene::Load (const std::string &fname) {
 
     return true;
 }
+
+
 
 void Scene::print(){
     std::cout << "#primitives = " << numPrimitives << " ; ";
@@ -204,23 +184,22 @@ bool Scene::trace (Ray r, Intersection *isect) {
     
     if (numPrimitives==0) return false;
     
-    
     // iterate over all primitives
     for (auto prim_itr = 0 ; prim_itr < prims.size() ; prim_itr++) {
         auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());    
+        
         if (mesh->intersect(this->vertices, r, &curr_isect)) {
-            if (!intersection) { // first intersection
+
+            // first intersection
+            if (!intersection) {
                 intersection = true;
-                *isect = curr_isect;         
+                *isect = curr_isect;
                 isect->f = BRDFs[prims[prim_itr].material_ndx].get();
-                // auto f = static_cast<Phong *> (isect->f);
             }
             else if (curr_isect.depth < isect->depth) {
                 *isect = curr_isect;
                 isect->f = BRDFs[prims[prim_itr].material_ndx].get();
             }
-            
-      
         }
     }
     return intersection;

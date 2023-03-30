@@ -33,8 +33,6 @@ int main(int argc, const char * argv[]) {
 
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
-    // std::cout << std::endl;
-
     // add an ambient light to the scene
     AmbientLight ambient(RGB(0.5f,0.5f,0.5f));
     scene.lights.push_back(&ambient);
