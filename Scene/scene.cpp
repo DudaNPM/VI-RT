@@ -186,7 +186,7 @@ bool Scene::trace (Ray r, Intersection *isect) {
     
     // iterate over all primitives
     for (auto prim_itr = 0 ; prim_itr < prims.size() ; prim_itr++) {
-        auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());    
+        auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());
         
         if (mesh->intersect(this->vertices, r, &curr_isect)) {
 
@@ -205,3 +205,22 @@ bool Scene::trace (Ray r, Intersection *isect) {
     return intersection;
 }
 
+
+
+// checks whether a point on a light source (distance maxL) is visible
+bool Scene::visibility (Ray s, const float maxL) {
+    bool visible = true;
+    Intersection curr_isect;
+    
+    if (numPrimitives==0) return true;
+    
+    // iterate over all primitives while visible
+    for (auto prim_itr = 0 ; prim_itr < prims.size() && visible ; prim_itr++) {
+        auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());
+
+        if (mesh->intersect(this->vertices, s, &curr_isect))
+            if (curr_isect.depth < maxL) // nao devia ser > ??????
+                visible = false;
+    }
+    return visible;
+}

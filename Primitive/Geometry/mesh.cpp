@@ -71,12 +71,14 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
         // Ponto de interseção :: I = ray.o + (ray.dir * t)
         Vector v = r.dir.operator*(t); 
         Point intPoint = r.o.operator+(Point(v.X,v.Y,v.Z));
+        Vector normal = face.geoNormal;
+        Vector wo = -1.f * r.dir;
+        normal.Faceforward(wo); // make sure the normal points to the same side of the surface as wo
         
-        // TODO
         // Guardar info do ponto de interseção
         isect->p = intPoint;
-        isect->gn = isect->sn = edge1.cross(edge2);
-        isect->wo = (Vector(0,0,0)).operator-(r.dir); // 0 - dir = -dir
+        isect->gn = isect->sn = normal;
+        isect->wo = wo;
         isect->depth = t;
         
         return true;

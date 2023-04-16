@@ -13,6 +13,7 @@
 #include "ImagePPM.hpp"
 #include "AmbientShader.hpp"
 #include "AmbientLight.hpp"
+#include "PointLight.hpp"
 
 int main(int argc, const char * argv[]) {
     Scene scene;
@@ -34,8 +35,14 @@ int main(int argc, const char * argv[]) {
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.5f,0.5f,0.5f));
-    scene.lights.push_back(&ambient);
+    AmbientLight *ambient = new AmbientLight(RGB(0.05,0.05,0.05));
+    scene.lights.push_back(ambient);
+    scene.numLights++;
+
+    // add a point light to the scene
+    PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65),
+    Point(288,508,282));
+    scene.lights.push_back(pl1);
     scene.numLights++;
 
     scene.printSummary();
