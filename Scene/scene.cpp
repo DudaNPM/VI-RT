@@ -128,6 +128,7 @@ bool Scene::Load (const std::string &fname) {
             Vector e1 = p0.vec2point(p2);
             Vector gn = e0.cross(e1);
 
+            gn.normalize();
             face.geoNormal = gn;
             face.hasShadingNormals = numNormals != 0 ? true : false;
             mesh->faces.push_back(face);
@@ -219,7 +220,7 @@ bool Scene::visibility (Ray s, const float maxL) {
         auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());
 
         if (mesh->intersect(this->vertices, s, &curr_isect))
-            if (curr_isect.depth < maxL) // nao devia ser > ??????
+            if (curr_isect.depth < maxL)
                 visible = false;
     }
     return visible;

@@ -12,6 +12,7 @@
 #include "StandardRenderer.hpp"
 #include "ImagePPM.hpp"
 #include "AmbientShader.hpp"
+#include "WhittedShader.hpp"
 #include "AmbientLight.hpp"
 #include "PointLight.hpp"
 
@@ -23,7 +24,7 @@ int main(int argc, const char * argv[]) {
     bool success;
     
     // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cube.obj");
-    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
     // success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // scene.print();
     
@@ -35,13 +36,12 @@ int main(int argc, const char * argv[]) {
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
     // add an ambient light to the scene
-    AmbientLight *ambient = new AmbientLight(RGB(0.05,0.05,0.05));
+    AmbientLight *ambient = new AmbientLight(RGB(0.2f,0.2f,0.2f));
     scene.lights.push_back(ambient);
     scene.numLights++;
 
     // add a point light to the scene
-    PointLight *pl1 = new PointLight(RGB(0.65,0.65,0.65),
-    Point(288,508,282));
+    PointLight *pl1 = new PointLight(RGB(0.65f,0.65f,0.65f),Point(288,508,282));
     scene.lights.push_back(pl1);
     scene.numLights++;
 
@@ -63,7 +63,7 @@ int main(int argc, const char * argv[]) {
     
     // create the shader
     RGB background(0.05f, 0.05f, 0.55f);
-    shd = new AmbientShader(&scene, background);
+    shd = new WhittedShader(&scene, background);
     // declare the renderer
     StandardRenderer myRender (cam, &scene, img, shd);
     // render

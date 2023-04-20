@@ -23,8 +23,8 @@ RGB AmbientShader::shade(bool intersected, Intersection isect) {
     // Loop over scene's light sources and process Ambient Lights
     for (auto& light : scene->lights) {
         // is it an ambient light ?
-        if (!light->type == AMBIENT_LIGHT) continue;
-        color += Ka * light->L();
+        if (light->type == AMBIENT_LIGHT)
+            color += Ka * light->L();
     }
 
     return color;

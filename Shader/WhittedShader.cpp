@@ -36,7 +36,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
                 Ldir.normalize();
 
                 // compute the cosine (Ldir, shadding normal)
-                float cosL = Ldir.dot(isect.sn);
+                float cosL = Ldir.dot(isect.gn);
                 if (cosL > 0.0) { // the light is NOT behind the primitive
                     // generate the shadow ray
                     Ray shadow(isect.p, Ldir);
@@ -44,7 +44,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
                     shadow.adjustOrigin(isect.gn);
 
                     if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occlude
-                        // color += f->Kd * L * cosL; // ERROR: RGB * float
+                        color += f->Kd * L * RGB(cosL, cosL, cosL); // ERROR: RGB * float
                     } // end cosL > 0
                 }
             }
@@ -76,12 +76,11 @@ RGB WhittedShader::shade(bool intersected, Intersection isect) {
     if (!intersected) { return (background); }
     
     // get the BRDF
-    Phong *f = (Phong *)isect.f;
+    Phong *f = static_cast<Phong *> (isect.f);
     
     // if there is a specular component sample it
-    if (!f->Ks.isZero()) {
+    if (!f->Ks.isZero())
         color += specularReflection (isect, f);
-    }
     
     color += directLighting(isect, f);
         

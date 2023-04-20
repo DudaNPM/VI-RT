@@ -10,7 +10,7 @@
 
 #include "vector.hpp"
 
-const float EPSILON=1e-3;
+const float EPSILON=1e-3f;
 
 class Ray {
 public:
