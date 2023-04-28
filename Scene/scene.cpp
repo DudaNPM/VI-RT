@@ -12,6 +12,7 @@
 #include "primitive.hpp"
 #include "mesh.hpp"
 #include "Phong.hpp"
+#include "AreaLight.hpp"
 
 #include <iostream>
 #include <set>
@@ -190,9 +191,7 @@ bool Scene::trace (Ray r, Intersection *isect) {
         auto mesh = static_cast<Mesh *>(prims[prim_itr].g.get());
         
         if (mesh->intersect(this->vertices, r, &curr_isect)) {
-
-            // first intersection
-            if (!intersection) {
+            if (!intersection) { // first intersection
                 intersection = true;
                 *isect = curr_isect;
                 isect->f = BRDFs[prims[prim_itr].material_ndx].get();
@@ -203,6 +202,29 @@ bool Scene::trace (Ray r, Intersection *isect) {
             }
         }
     }
+
+    //isect->isLight = false; // download new intersection.hpp
+    // now iterate over light sources and intersect with those that have geometry
+    //for (auto l = lights.begin(); l != lights.end(); l++) {
+    //    if ((*l)->type == AREA_LIGHT) {
+    //        AreaLight *al = (AreaLight*) *l;
+    //        
+    //        if (al->gem->intersect(r, &curr_isect)) {
+    //            if (!intersection) { // first intersection
+    //                intersection = true;
+    //                *isect = curr_isect;
+    //                isect->isLight = true;
+    //                isect->Le = al->L();
+    //            }
+    //            else if (curr_isect.depth < isect->depth) {
+    //                *isect = curr_isect;
+    //                isect->isLight = true;
+    //                isect->Le = al->L();
+    //            }
+    //        }
+    //    }
+    //}
+
     return intersection;
 }
 

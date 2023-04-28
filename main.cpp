@@ -13,8 +13,10 @@
 #include "ImagePPM.hpp"
 #include "AmbientShader.hpp"
 #include "WhittedShader.hpp"
+#include "DistributedShader.hpp"
 #include "AmbientLight.hpp"
 #include "PointLight.hpp"
+#include "AreaLight.hpp"
 
 int main(int argc, const char * argv[]) {
     Scene scene;
@@ -41,9 +43,15 @@ int main(int argc, const char * argv[]) {
     scene.numLights++;
 
     // add a point light to the scene
-    PointLight *pl1 = new PointLight(RGB(0.65f,0.65f,0.65f),Point(288,508,282));
-    scene.lights.push_back(pl1);
+    // PointLight *pl1 = new PointLight(RGB(0.65f,0.65f,0.65f),Point(288,508,282));
+    // scene.lights.push_back(pl1);
+    // scene.numLights++;
+
+    // add a area light to the scene
+    AreaLight *al1 = new AreaLight(RGB(1.,1.,1.),Point(300,508,282),Point(280,508,282),Point(280,508,315),Vector(0,-1,0));
+    scene.lights.push_back(al1);
     scene.numLights++;
+
 
     scene.printSummary();
     
@@ -63,7 +71,8 @@ int main(int argc, const char * argv[]) {
     
     // create the shader
     RGB background(0.05f, 0.05f, 0.55f);
-    shd = new WhittedShader(&scene, background);
+    // shd = new WhittedShader(&scene, background);
+    shd = new DistributedShader(&scene, background);
     // declare the renderer
     StandardRenderer myRender (cam, &scene, img, shd);
     // render

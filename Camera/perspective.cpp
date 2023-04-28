@@ -8,8 +8,16 @@
 #include "perspective.hpp"
 
 bool Perspective::GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter) {
-    float xs = (2.0f * (x + 0.5f) / this->W ) - 1.0f;
-    float ys = (2.0f * (this->H - y - 1.0f + 0.5f) / this->H ) - 1.0f;
+    float xs;
+    float ys;
+
+    if (cam_jitter == NULL) {
+        xs = 2.f * ((float)x + .5f)/W - 1.f;
+        ys = 2.f * ((float)(H-y-1) + .5f)/H - 1.f;
+    } else {
+        xs = 2.f * ((float)x + cam_jitter[0])/W - 1.f;
+        ys = 2.f * ((float)(H-y-1) + cam_jitter[1])/H - 1.f;
+    }
 
     float xc = xs * tanf(this->fovW / 2.0f);
     float yc = ys * tanf(this->fovH / 2.0f);

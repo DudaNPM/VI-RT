@@ -44,7 +44,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
                     shadow.adjustOrigin(isect.gn);
 
                     if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occlude
-                        color += f->Kd * L * RGB(cosL, cosL, cosL); // ERROR: RGB * float
+                        color += f->Kd * L * RGB(cosL, cosL, cosL);
                     } // end cosL > 0
                 }
             }
@@ -73,14 +73,13 @@ RGB WhittedShader::shade(bool intersected, Intersection isect) {
     RGB color(0.,0.,0.);
     
     // if no intersection, return background
-    if (!intersected) { return (background); }
+    if (!intersected) return background;
     
     // get the BRDF
     Phong *f = static_cast<Phong *> (isect.f);
     
     // if there is a specular component sample it
-    if (!f->Ks.isZero())
-        color += specularReflection (isect, f);
+    if (!f->Ks.isZero()) color += specularReflection (isect, f);
     
     color += directLighting(isect, f);
         

@@ -25,6 +25,7 @@ public:
     Vector operator +(const Vector &p) const { return {X+p.X, Y+p.Y, Z+p.Z};}
     Vector operator *(const float f) const { return {f*X, f*Y, f*Z};}
     Vector operator *(const double f) const { return {(float)(f*X), (float)(f*Y), (float)(f*Z)};}
+    Vector operator /(const float f) const { return {X/f, Y/f, Z/f};}
     friend Vector operator*(const float f, const Vector& p) {
         return p*f;
     }
@@ -48,8 +49,6 @@ public:
     }
     // from pbrt book (3rd ed.), sec 2.2.1, pag 65
     Vector cross (Vector v2) {
-        // double v1x = X, v1y = Y, v1z = Z;
-        // double v2x = v2.X, v2y = v2.Y, v2z = v2.Z;
         float v1x = X, v1y = Y, v1z = Z;
         float v2x = v2.X, v2y = v2.Y, v2z = v2.Z;
         return Vector((v1y * v2z) - (v1z * v2y), (v1z * v2x) - (v1x * v2z), (v1x * v2y) - (v1y * v2x));
@@ -72,6 +71,25 @@ public:
     Vector Faceforward(const Vector &v) const {
         Vector vv = *this;
         return (vv.dot(v) < 0.f) ? -1.f * vv : vv;
+    }
+    // Generate an orthonormal coordinate system around this vector (must be normalized)
+    // returns the 2 new axis orthogonal top the vector
+    void CoordinateSystem(Vector *v2, Vector *v3) {
+        if (abs(X) > abs(Y))
+            *v2 = Vector(-Z, 0, X) / sqrtf(X * X + Z * Z);
+        else
+            *v2 = Vector(0, Z, -Y) / sqrtf(Y * Y + Z * Z);
+        *v3 = cross(*v2);
+    }
+    // returns a new vector, which is this vector rotated to the
+    // reference system defined by Rx, Ry, Rz
+    Vector Rotate (Vector Rx, Vector Ry, Vector Rz) {
+        Vector vec;
+        
+        vec.X = X * Rx.X + Y * Ry.X + Z * Rz.X;
+        vec.Y = X * Rx.Y + Y * Ry.Y + Z * Rz.Y;
+        vec.Z = X * Rx.Z + Y * Ry.Z + Z * Rz.Z;
+        return vec;
     }
 };
 
@@ -103,6 +121,9 @@ public:
     Point Permute(int x, int y, int z) {
         const float XYZ[3]={X,Y,Z};
         return Point(XYZ[x], XYZ[y], XYZ[z]);
+    }
+    float distance(Point p) {
+        return sqrtf(powf(X - p.X, 2.0f) + powf(Y - p.Y, 2.0f));
     }
 };
 
