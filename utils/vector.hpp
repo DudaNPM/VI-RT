@@ -123,7 +123,7 @@ public:
         return Point(XYZ[x], XYZ[y], XYZ[z]);
     }
     float distance(Point p) {
-        return sqrtf(powf(X - p.X, 2.0f) + powf(Y - p.Y, 2.0f));
+        return sqrtf(powf(X - p.X, 2.0f) + powf(Y - p.Y, 2.0f) + powf(Z - p.Z, 2.0f));
     }
 };
 

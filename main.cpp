@@ -25,8 +25,8 @@ int main(int argc, const char * argv[]) {
     Shader *shd;
     bool success;
     
-    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cube.obj");
-    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+     success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+    //success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
     // success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
     // scene.print();
     
@@ -48,7 +48,13 @@ int main(int argc, const char * argv[]) {
     // scene.numLights++;
 
     // add a area light to the scene
-    AreaLight *al1 = new AreaLight(RGB(1.,1.,1.),Point(300,508,282),Point(280,508,282),Point(280,508,315),Vector(0,-1,0));
+    Point p0(300,508,282);
+    Point p1(280,508,282);
+    Point p2(280,508,315);
+    Vector e0 = p0.vec2point(p1);
+    Vector e1 = p0.vec2point(p2);
+    Vector gn = (e0.cross(e1)) * -1.f;
+    AreaLight *al1 = new AreaLight(RGB(0.7,0.7,0.7),Point(343.0,548.0, 227.0),Point(343.0, 548.0, 332.0),Point(213.0, 548.0, 332.0),gn);
     scene.lights.push_back(al1);
     scene.numLights++;
 

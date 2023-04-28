@@ -8,7 +8,7 @@ RGB DistributedShader::shade(bool intersected, Intersection isect) {
     if (!intersected) return background;
     
     // intersection with a light source
-    // if (isect.isLight) return isect.Le;
+    if (isect.isLight) return isect.Le;
 
     
     Phong *f = static_cast<Phong *> (isect.f);
@@ -39,18 +39,20 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
         if (light->type == POINT_LIGHT) { // is it a point light ?
             // ...
         }
-
+        
         if (light->type == AREA_LIGHT) { // is it an area light ?
             if (!f->Kd.isZero()) {
                 RGB L;
                 Point lpoint;
                 float l_pdf;
-                AreaLight *al = (AreaLight *) light;
+                auto al = static_cast<AreaLight *> (light);
 
                 float rnd[2];
                 rnd[0] = ((float)rand()) / ((float)RAND_MAX);
                 rnd[1] = ((float)rand()) / ((float)RAND_MAX);
-                L = al->Sample_L(rnd, &lpoint, l_pdf);
+                L = al->Sample_L(rnd, &lpoint, &l_pdf);
+                
+                //printf("L_DIRIRIRIRIIRRI %f \n", l_pdf);
                 
                 // compute the direction from the intersection point to the light source
                 Vector Ldir = isect.p.vec2point(lpoint);

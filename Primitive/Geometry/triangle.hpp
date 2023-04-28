@@ -9,7 +9,7 @@ public:
     Vector normal, edge1, edge2;
     BB bb;
     
-    /*
+    
     bool intersect (Ray r, Intersection *isect) {
         // intersect the ray with the triangle boundind box
         if (!this->bb.intersect(r)) return false;
@@ -60,7 +60,7 @@ public:
         else // This means that there is a line intersection but not a ray intersection.
             return false;
     }
-    */
+    
     
     Triangle(Point _v1, Point _v2, Point _v3, Vector _normal): v1(_v1), v2(_v2), v3(_v3), normal(_normal) {
         edge1 = v1.vec2point(v2);

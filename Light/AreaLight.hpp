@@ -21,7 +21,7 @@ public:
 
     // return a point p, RGB radiance and pdf given a rand pair (0, 1(
     // sample point: "Globbbl Illumination Compendium", pp. 12, item 18
-    RGB Sample_L (float *r, Point *p, float &_pdf) {
+    RGB Sample_L (float *r, Point *p, float *_pdf) {
         const float sqrt_r0 = sqrtf(r[0]);
         const float alpha = 1.f - sqrt_r0;
         const float beta = (1.f-r[1]) * sqrt_r0;
@@ -29,7 +29,7 @@ public:
         p->X = alpha*gem->v1.X + beta*gem->v2.X + gamma*gem->v3.X;
         p->Y = alpha*gem->v1.Y + beta*gem->v2.Y + gamma*gem->v3.Y;
         p->Z = alpha*gem->v1.Z + beta*gem->v2.Z + gamma*gem->v3.Z;
-        _pdf = pdf;
+        *_pdf = pdf;
         return intensity;
     }
 };

@@ -203,27 +203,27 @@ bool Scene::trace (Ray r, Intersection *isect) {
         }
     }
 
-    //isect->isLight = false; // download new intersection.hpp
+    isect->isLight = false; // download new intersection.hpp
     // now iterate over light sources and intersect with those that have geometry
-    //for (auto l = lights.begin(); l != lights.end(); l++) {
-    //    if ((*l)->type == AREA_LIGHT) {
-    //        AreaLight *al = (AreaLight*) *l;
-    //        
-    //        if (al->gem->intersect(r, &curr_isect)) {
-    //            if (!intersection) { // first intersection
-    //                intersection = true;
-    //                *isect = curr_isect;
-    //                isect->isLight = true;
-    //                isect->Le = al->L();
-    //            }
-    //            else if (curr_isect.depth < isect->depth) {
-    //                *isect = curr_isect;
-    //                isect->isLight = true;
-    //                isect->Le = al->L();
-    //            }
-    //        }
-    //    }
-    //}
+    for (auto l = lights.begin(); l != lights.end(); l++) {
+        if ((*l)->type == AREA_LIGHT) {
+            AreaLight *al = (AreaLight*) *l;
+            
+            if (al->gem->intersect(r, &curr_isect)) {
+                if (!intersection) { // first intersection
+                    intersection = true;
+                    *isect = curr_isect;
+                    isect->isLight = true;
+                    isect->Le = al->L();
+                }
+                else if (curr_isect.depth < isect->depth) {
+                    *isect = curr_isect;
+                    isect->isLight = true;
+                    isect->Le = al->L();
+                }
+            }
+        }
+    }
 
     return intersection;
 }
