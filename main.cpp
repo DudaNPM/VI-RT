@@ -25,9 +25,8 @@ int main(int argc, const char * argv[]) {
     Shader *shd;
     bool success;
     
-     success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
-    //success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
-    // success = scene.Load("C:/Users/User/Desktop/CG/VI/VI-RT/Scene/tinyobjloader/models/cornell_box.obj");
+    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
     // scene.print();
     
     if (!success) {
@@ -38,7 +37,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
     // add an ambient light to the scene
-    AmbientLight *ambient = new AmbientLight(RGB(0.2f,0.2f,0.2f));
+    AmbientLight *ambient = new AmbientLight(RGB());
     scene.lights.push_back(ambient);
     scene.numLights++;
 
@@ -48,15 +47,28 @@ int main(int argc, const char * argv[]) {
     // scene.numLights++;
 
     // add a area light to the scene
-    Point p0(300,508,282);
-    Point p1(280,508,282);
-    Point p2(280,508,315);
-    Vector e0 = p0.vec2point(p1);
-    Vector e1 = p0.vec2point(p2);
-    Vector gn = (e0.cross(e1)) * -1.f;
-    AreaLight *al1 = new AreaLight(RGB(0.7,0.7,0.7),Point(343.0,548.0, 227.0),Point(343.0, 548.0, 332.0),Point(213.0, 548.0, 332.0),gn);
-    scene.lights.push_back(al1);
-    scene.numLights++;
+    Vector n(0,-1,0);
+    AreaLight *al01 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(069.50f,548.80f,489.30f),Point(069.50f,548.80f,419.40f),Point(139.00f,548.80f,419.40f),n);
+    AreaLight *al02 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(069.50f,548.80f,489.30f),Point(139.00f,548.80f,419.40f),Point(139.00f,548.80f,489.30f),n);
+    AreaLight *al03 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(139.00f,548.70f,139.80f),Point(069.50f,548.75f,139.80f),Point(139.00f,548.65f,069.90f),n);
+    AreaLight *al04 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(139.00f,548.65f,069.90f),Point(069.50f,548.75f,139.80f),Point(069.50f,548.73f,069.90f),n);
+    AreaLight *al05 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(417.00f,548.40f,139.80f),Point(417.00f,548.30f,069.90f),Point(486.50f,548.20f,069.90f),n);
+    AreaLight *al06 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(486.50f,548.20f,069.90f),Point(486.50f,548.30f,139.80f),Point(417.00f,548.40f,139.80f),n);
+    AreaLight *al07 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(417.00f,548.75f,489.30f),Point(417.00f,548.70f,419.40f),Point(486.50f,548.65f,419.40f),n);
+    AreaLight *al08 = new AreaLight(RGB(0.4f,0.4f,0.4f),Point(486.50f,548.65f,419.40f),Point(417.00f,548.75f,489.30f),Point(486.50f,548.73f,489.30f),n);
+    AreaLight *al09 = new AreaLight(RGB(1.0f,1.0f,1.0f),Point(243.25f,548.80f,314.55f),Point(243.25f,548.76f,244.65f),Point(312.75f,548.70f,244.65f),n);
+    AreaLight *al10 = new AreaLight(RGB(1.0f,1.0f,1.0f),Point(312.75f,548.70f,244.65f),Point(312.75f,548.76f,314.75f),Point(243.25f,548.80f,314.55f),n);
+    scene.lights.push_back(al01);
+    scene.lights.push_back(al02);
+    scene.lights.push_back(al03);
+    scene.lights.push_back(al04);
+    scene.lights.push_back(al05);
+    scene.lights.push_back(al06);
+    scene.lights.push_back(al07);
+    scene.lights.push_back(al08);
+    scene.lights.push_back(al09);
+    scene.lights.push_back(al10);
+    scene.numLights += 10;
 
 
     scene.printSummary();

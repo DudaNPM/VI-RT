@@ -17,6 +17,8 @@ public:
         intensity = _power * RGB(pdf,pdf,pdf);
     }
 
+    RGB L() { return power;}
+
     ~AreaLight () {delete gem;}
 
     // return a point p, RGB radiance and pdf given a rand pair (0, 1(

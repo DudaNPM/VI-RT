@@ -17,7 +17,7 @@ void StandardRenderer::Render () {
     this->cam->getResolution(&W, &H);
     
     // main rendering loop: get primary rays from the camera until done
-    const int spp=16;
+    const int spp=32;
     for (y=0; y<H; y++) {  // loop over rows
         for (x=0; x<W; x++) { // loop over columns
             RGB color(0.,0.,0.);

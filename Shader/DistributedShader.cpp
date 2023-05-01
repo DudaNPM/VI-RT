@@ -23,6 +23,60 @@ RGB DistributedShader::shade(bool intersected, Intersection isect) {
 }
 
 
+RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
+    RGB color(0.,0.,0.);
+
+    int n = scene->lights.size();
+    int indx = rand() % n;
+    auto &light = scene->lights.at(indx);
+
+    if (light->type == AMBIENT_LIGHT) { // is it an ambient light ?
+        if (!f->Ka.isZero()) {
+                RGB Ka = f->Ka;
+                color += Ka * light->L();
+        }
+    }
+
+    else if (light->type == POINT_LIGHT) { // is it a point light ?
+        // ...
+    }
+
+    else if (light->type == AREA_LIGHT) { // is it an area light ?
+        if (!f->Kd.isZero()) {
+            RGB L;
+            Point lpoint;
+            float l_pdf;
+            auto al = static_cast<AreaLight *> (light);
+            float rnd[2];
+            rnd[0] = ((float)rand()) / ((float)RAND_MAX);
+            rnd[1] = ((float)rand()) / ((float)RAND_MAX);
+            L = al->Sample_L(rnd, &lpoint, &l_pdf);
+            
+            // compute the direction from the intersection point to the light source
+            Vector Ldir = isect.p.vec2point(lpoint);
+            const float Ldistance = Ldir.norm();
+            Ldir.normalize();
+            // cosine between Ldir and the shading normal at the intersection point
+            float cosL = Ldir.dot(isect.sn);
+            // cosine between Ldir and the area light source normal
+            float cosL_LA = Ldir.dot(al->gem->normal);
+            
+            // shade
+            if (cosL > 0.0 && cosL_LA <= 0.0) { // light NOT behind primitive AND light normal points to the ray o
+                Ray shadow(isect.p, Ldir); // generate the shadow ray
+                shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
+                
+                if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
+                    color += ((f->Kd * L * RGB(cosL,cosL,cosL)) / RGB(l_pdf,l_pdf,l_pdf)) * RGB((float)n,(float)n,(float)n);
+                }
+            } // end cosL > 0.
+        }
+    } // end area light
+
+    return color;
+}
+
+
 RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
     RGB color(0.,0.,0.);
     
@@ -51,8 +105,6 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
                 rnd[0] = ((float)rand()) / ((float)RAND_MAX);
                 rnd[1] = ((float)rand()) / ((float)RAND_MAX);
                 L = al->Sample_L(rnd, &lpoint, &l_pdf);
-                
-                //printf("L_DIRIRIRIRIIRRI %f \n", l_pdf);
                 
                 // compute the direction from the intersection point to the light source
                 Vector Ldir = isect.p.vec2point(lpoint);
