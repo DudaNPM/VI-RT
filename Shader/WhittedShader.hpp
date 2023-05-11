@@ -17,7 +17,7 @@ class WhittedShader: public Shader {
     RGB specularReflection (Intersection isect, Phong *f);
 public:
     WhittedShader (Scene *scene, RGB bg): background(bg), Shader(scene) {}
-    RGB shade (bool intersected, Intersection isect);
+    RGB shade (bool intersected, Intersection isect, int depth);
 };
 
 #endif /* AmbientShader_hpp */

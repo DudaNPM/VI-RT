@@ -45,13 +45,13 @@ public:
         if (t > EPSILON) { // ray intersection
             // Ponto de interseção :: I = ray.o + (ray.dir * t)
             Vector v = r.dir * t;
-            Point intPoint = r.o.operator+(Point(v.X,v.Y,v.Z));
+            Point intPoint = r.o + Point(v.X,v.Y,v.Z);
             Vector wo = -1.f * r.dir;
-            this->normal.Faceforward(wo); // make sure the normal points to the same side of the surface as wo
-            
+            normal.Faceforward(wo); // make sure the normal points to the same side of the surface as wo
+
             // Guardar info do ponto de interseção
             isect->p = intPoint;
-            isect->gn = isect->sn = this->normal;
+            isect->gn = isect->sn = normal;
             isect->wo = wo;
             isect->depth = t;
             

@@ -69,8 +69,8 @@ bool Mesh::TriangleIntersect(std::vector<Point> vertices, Ray r, Face face, Inte
     
     if (t > EPSILON) { // ray intersection
         // Ponto de interseção :: I = ray.o + (ray.dir * t)
-        Vector v = r.dir.operator*(t); 
-        Point intPoint = r.o.operator+(Point(v.X,v.Y,v.Z));
+        Vector v = r.dir * t; 
+        Point intPoint = r.o + Point(v.X,v.Y,v.Z);
         Vector normal = face.geoNormal;
         Vector wo = -1.f * r.dir;
         normal.Faceforward(wo); // make sure the normal points to the same side of the surface as wo

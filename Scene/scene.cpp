@@ -215,11 +215,13 @@ bool Scene::trace (Ray r, Intersection *isect) {
                     *isect = curr_isect;
                     isect->isLight = true;
                     isect->Le = al->L();
+                    isect->power = al->power;
                 }
                 else if (curr_isect.depth < isect->depth) {
                     *isect = curr_isect;
                     isect->isLight = true;
                     isect->Le = al->L();
+                    isect->power = al->power;
                 }
             }
         }

@@ -7,6 +7,7 @@
 
 #include "StandardRenderer.hpp"
 #include "Phong.hpp"
+#include "PathTracerShader.hpp"
 #include <stdlib.h>
 
 void StandardRenderer::Render () {
@@ -17,7 +18,7 @@ void StandardRenderer::Render () {
     this->cam->getResolution(&W, &H);
     
     // main rendering loop: get primary rays from the camera until done
-    const int spp=32;
+    const int spp=8;
     for (y=0; y<H; y++) {  // loop over rows
         for (x=0; x<W; x++) { // loop over columns
             RGB color(0.,0.,0.);
@@ -27,18 +28,22 @@ void StandardRenderer::Render () {
                 Intersection isect;
                 bool intersected;
                 RGB this_color;
-
-                float jitterV[2] = {(rand() % 100) / 100, (rand() % 100) / 100};
+                
+                float jitterV[2] = {((float)rand()) / ((float)RAND_MAX), ((float)rand()) / ((float)RAND_MAX)};
             
                 // Generate Ray (camera)
-                this->cam->GenerateRay(x,y,&primary,jitterV);
+                cam->GenerateRay(x,y,&primary,jitterV);
                 
                 // trace ray (scene)
-                intersected = this->scene->trace(primary, &isect);
+                intersected = scene->trace(primary, &isect);
 
                 // shade this intersection (shader)
-                this_color = this->shd->shade(intersected, isect);
+                this_color = shd->shade(intersected, isect, 0);
                 color += this_color;
+
+                //if (x==800 && y==512) {
+                //    color = RGB(1.0,1.0,0);
+                //}
             }
 
             color = color / RGB(spp,spp,spp);

@@ -65,11 +65,11 @@ RGB WhittedShader::specularReflection (Intersection isect, Phong *f) {
     bool intersected = scene->trace(specular, &s_isect);
     
     // shade this intersection
-    RGB color = shade(intersected, s_isect);
+    RGB color = shade(intersected, s_isect, 0);
     return color;
 }
 
-RGB WhittedShader::shade(bool intersected, Intersection isect) {
+RGB WhittedShader::shade(bool intersected, Intersection isect, int depth) {
     RGB color(0.,0.,0.);
     
     // if no intersection, return background

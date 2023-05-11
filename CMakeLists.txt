@@ -13,6 +13,7 @@ add_executable(renderer
                 Shader/AmbientShader.cpp
                 Shader/WhittedShader.cpp
                 Shader/DistributedShader.cpp
+                Shader/PathTracerShader.cpp
                 utils/AABB.cpp
                 main.cpp)
 target_include_directories(renderer PRIVATE "3DSortingStruct/" "Camera/" "Image/" "Light/" "Primitive/" "Primitive/BRDF" "Primitive/Geometry" "Rays/" "Renderer/" "Scene/" "Shader/" "utils/" )

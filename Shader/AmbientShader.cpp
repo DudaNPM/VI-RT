@@ -8,11 +8,11 @@
 #include "AmbientShader.hpp"
 #include "Phong.hpp"
 
-RGB AmbientShader::shade(bool intersected, Intersection isect) {
+RGB AmbientShader::shade(bool intersected, Intersection isect, int depth) {
     RGB color(0.,0.,0.);
     
     // if no intersection, return background
-    if (!intersected) return (this->background);
+    if (!intersected) return this->background;
 
     // verify whether the intersected object has an ambient component
     auto f = static_cast<Phong *> (isect.f);
