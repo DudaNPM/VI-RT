@@ -44,8 +44,8 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
                 auto al = static_cast<AreaLight *> (light);
 
                 float rnd[2];
-                rnd[0] = ((float)rand()) / ((float)RAND_MAX);
-                rnd[1] = ((float)rand()) / ((float)RAND_MAX);
+                rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                rnd[1] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
                 L = al->Sample_L(rnd, &lpoint, l_pdf);
                 
                 // compute the direction from the intersection point to the light source
@@ -64,7 +64,7 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
                     shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
                     
                     if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
-                        color += (f->Kd * L * RGB(cosL,cosL,cosL)) / RGB(l_pdf,l_pdf,l_pdf);
+                        color += f->Kd * L * cosL / l_pdf;
                     }
                 } // end cosL > 0.
             }
@@ -99,8 +99,8 @@ RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
             float l_pdf;
             auto al = static_cast<AreaLight *> (light);
             float rnd[2];
-            rnd[0] = ((float)rand()) / ((float)RAND_MAX);
-            rnd[1] = ((float)rand()) / ((float)RAND_MAX);
+            rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            rnd[1] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
             L = al->Sample_L(rnd, &lpoint, l_pdf);
             
             // compute the direction from the intersection point to the light source
@@ -118,7 +118,7 @@ RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
                 shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
                 
                 if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
-                    color = ((f->Kd * L * RGB(cosL,cosL,cosL)) / RGB(l_pdf,l_pdf,l_pdf)) * RGB((float)n,(float)n,(float)n);
+                    color = (f->Kd * L * cosL / l_pdf) * n;
                 }
             } // end cosL > 0.
         }

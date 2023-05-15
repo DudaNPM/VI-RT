@@ -34,7 +34,8 @@ int main(int argc, const char * argv[]) {
         std::cout << "ERROR!! :o\n";
         return 1;
     }
-
+    
+    srand(time(NULL));
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
     // add an ambient light to the scene
@@ -58,8 +59,8 @@ int main(int argc, const char * argv[]) {
     AreaLight *al07 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(417.00f,547.75f,489.30f),Point(417.00f,547.70f,419.40f),Point(486.50f,547.65f,419.40f),n);
     AreaLight *al08 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(486.50f,547.65f,419.40f),Point(417.00f,547.75f,489.30f),Point(486.50f,547.73f,489.30f),n);
     */
-    AreaLight *al09 = new AreaLight(RGB(0.5f,0.5f,0.5f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
-    AreaLight *al10 = new AreaLight(RGB(0.5f,0.5f,0.5f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
+    AreaLight *al09 = new AreaLight(RGB(0.000000001f,0.000000001f,0.000000001f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
+    AreaLight *al10 = new AreaLight(RGB(0.000000001f,0.000000001f,0.000000001f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
     /*
     scene.lights.push_back(al01); scene.numLights++;
     scene.lights.push_back(al02); scene.numLights++;
@@ -98,7 +99,7 @@ int main(int argc, const char * argv[]) {
     // render
     myRender.Render();
     // save the image
-    img->Save("gold.ppm");
+    img->Save("256spp.ppm");
     
     std::cout << "That's all, folks!" << std::endl;
     return 0;

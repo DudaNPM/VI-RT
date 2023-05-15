@@ -14,7 +14,7 @@ public:
         type = AREA_LIGHT;
         gem = new Triangle(_v1,_v2,_v3,_n);
         pdf = 1.0f / gem->area(); // for uniform sampling the area
-        intensity = _power * RGB(pdf,pdf,pdf);
+        intensity = _power * pdf;
     }
 
     RGB L() { return intensity; }

@@ -44,7 +44,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
                     shadow.adjustOrigin(isect.gn);
 
                     if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occlude
-                        color += f->Kd * L * RGB(cosL, cosL, cosL);
+                        color += f->Kd * L * cosL;
                     } // end cosL > 0
                 }
             }

@@ -37,12 +37,28 @@ public:
         res.B = B * obj.B;
         return res;
     }
+    RGB operator*(float x)
+    {
+        RGB res;
+        res.R = R * x;
+        res.G = G * x;
+        res.B = B * x;
+        return res;
+    }
     RGB operator/(RGB const& obj)
     {
         RGB res;
         res.R = R / obj.R;
         res.G = G / obj.G;
         res.B = B / obj.B;
+        return res;
+    }
+    RGB operator/(float x)
+    {
+        RGB res;
+        res.R = R / x;
+        res.G = G / x;
+        res.B = B / x;
         return res;
     }
     float Y() {
