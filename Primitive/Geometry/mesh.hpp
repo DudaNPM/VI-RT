@@ -5,12 +5,12 @@
 //  Created by Luis Paulo Santos on 05/02/2023.
 //
 
+
 #ifndef mesh_hpp
 #define mesh_hpp
 
 #include "geometry.hpp"
-#include "vector.hpp"
-#include <vector>
+
 
 // partially inspired in pbrt book (3rd ed.), sec 3.6, pag 152
 

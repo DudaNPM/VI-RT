@@ -17,4 +17,6 @@ add_executable(renderer
                 utils/AABB.cpp
                 main.cpp)
 target_include_directories(renderer PRIVATE "3DSortingStruct/" "Camera/" "Image/" "Light/" "Primitive/" "Primitive/BRDF" "Primitive/Geometry" "Rays/" "Renderer/" "Scene/" "Shader/" "utils/" )
-target_link_libraries(renderer tinyobjloader)
+
+find_package(OpenMP)
+target_link_libraries(renderer tinyobjloader OpenMP::OpenMP_CXX)

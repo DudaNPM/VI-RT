@@ -42,7 +42,6 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
                 Point lpoint;
                 float l_pdf;
                 auto al = static_cast<AreaLight *> (light);
-
                 float rnd[2];
                 rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
                 rnd[1] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -118,7 +117,7 @@ RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
                 shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
                 
                 if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
-                    color = (f->Kd * L * cosL / l_pdf) * n;
+                    color = (f->Kd * L * cosL / l_pdf) * (float) n;
                 }
             } // end cosL > 0.
         }

@@ -5,11 +5,19 @@
 //  Created by Luis Paulo Santos on 14/03/2023.
 //
 
+
 #ifndef shader_hpp
 #define shader_hpp
 
+#define _USE_MATH_DEFINES
+
+#include "AreaLight.hpp"
 #include "scene.hpp"
+#include "Phong.hpp"
+#include "light.hpp"
 #include "RGB.hpp"
+#include "ray.hpp"
+
 
 class Shader {
 protected:

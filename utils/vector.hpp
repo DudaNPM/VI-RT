@@ -5,10 +5,12 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
+
 #ifndef vector_hpp
 #define vector_hpp
 
 #include <cmath>
+
 
 class Vector {
 public:

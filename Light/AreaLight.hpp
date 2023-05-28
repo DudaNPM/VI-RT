@@ -1,8 +1,9 @@
 #ifndef AreaLight_hpp
 #define AreaLight_hpp
 
+
 #include "light.hpp"
-#include "triangle.hpp"
+
 
 class AreaLight: public Light {
 public:

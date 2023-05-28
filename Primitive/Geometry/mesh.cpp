@@ -5,8 +5,8 @@
 //  Created by Luis Paulo Santos on 05/02/2023.
 //
 
+
 #include "mesh.hpp"
-#include <limits>
 
 
 Mesh::Mesh(int numFaces, int numVertices, int numNormals){

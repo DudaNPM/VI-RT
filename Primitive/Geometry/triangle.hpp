@@ -1,7 +1,9 @@
 #ifndef triangle_hpp
 #define triangle_hpp
 
+
 #include "geometry.hpp"
+
 
 class Triangle: public Geometry {
 public:

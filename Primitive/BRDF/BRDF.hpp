@@ -5,11 +5,13 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
+
 #ifndef BRDF_hpp
 #define BRDF_hpp
 
 #include "vector.hpp"
 #include "RGB.hpp"
+
 
 typedef enum {
     SPECULAR_REF=1,

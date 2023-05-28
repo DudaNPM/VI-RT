@@ -1,13 +1,9 @@
 #ifndef PathTracerShader_hpp
 #define PathTracerShader_hpp
 
-#define _USE_MATH_DEFINES
-#include <cmath>
+
 #include "shader.hpp"
-#include "Phong.hpp"
-#include "RGB.hpp"
-#include "AreaLight.hpp"
-#include "light.hpp"
+
 
 class PathTracerShader: public Shader {
     RGB background;

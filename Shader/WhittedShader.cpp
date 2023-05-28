@@ -5,9 +5,9 @@
 //  Created by Luis Paulo Santos on 14/03/2023.
 //
 
+
 #include "WhittedShader.hpp"
-#include "Phong.hpp"
-#include "ray.hpp"
+
 
 RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
     RGB color(0.,0.,0.);

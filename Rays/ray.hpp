@@ -5,12 +5,14 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
+
 #ifndef Ray_hpp
 #define Ray_hpp
 
+const float EPSILON=1e-3f;
+
 #include "vector.hpp"
 
-const float EPSILON=1e-3f;
 
 class Ray {
 public:

@@ -17,6 +17,10 @@
 #include "intersection.hpp"
 #include "BRDF.hpp"
 
+#include <iostream>
+#include <random>
+
+
 class Scene {
 private:
     std::vector<Point> vertices;

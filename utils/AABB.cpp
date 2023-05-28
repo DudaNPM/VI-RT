@@ -5,13 +5,15 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
+
 #include "AABB.hpp"
 
+#include <algorithm>
 #include <utility>
 #include <limits>
-#include <algorithm>
 
 using namespace std;
+
 
 // Algorithm explained: https://www.youtube.com/watch?v=USjbg5QXk3g
 bool BB::intersect (Ray ray) {

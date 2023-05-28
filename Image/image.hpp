@@ -5,11 +5,16 @@
 //  Created by Luis Paulo Santos on 10/02/2023.
 //
 
+
 #ifndef image_hpp
 #define image_hpp
 
 #include "RGB.hpp"
+
+#include <iostream>
+#include <fstream>
 #include <string>
+
 
 class Image {
 protected:

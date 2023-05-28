@@ -5,10 +5,12 @@
 //  Created by Luis Paulo Santos on 14/03/2023.
 //
 
+
 #ifndef AmbientShader_hpp
 #define AmbientShader_hpp
 
 #include "shader.hpp"
+
 
 class AmbientShader: public Shader {
     RGB background;

@@ -13,31 +13,38 @@ RGB PathTracerShader::shade(bool intersected, Intersection isect, int depth) {
     // get the BRDF
     Phong *f = static_cast<Phong *> (isect.f);
 
+/*
+    // V) PARAGEM DA RECURSIVIDADE USANDO ROLETA RUSSA
     float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     if (depth < MAX_DEPTH || rnd_russian < continue_p) {
         RGB lcolor(0.,0.,0.);
-        
+
+        // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
         // random select between specular and diffuse
         float s_p = f->Ks.Y() / (f->Ks.Y() + f->Kd.Y());
         float rnd = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-
-        // do specular
-        if (rnd < s_p) {
-            if (!f->Ks.isZero())
-                lcolor = specularReflection(isect, f, depth+1) / s_p;
-        }
-        // do diffuse
-        else {
-            if (!f->Kd.isZero())
-                lcolor = diffuseReflection(isect, f, depth+1) / (1.0f - s_p);
-        }
-        
+    
+        if (rnd < s_p) lcolor = specularReflection(isect, f, depth+1) / s_p;
+        else lcolor = diffuseReflection(isect, f, depth+1) / (1 - s_p);
+    
         // no russian roulette
         if (depth < MAX_DEPTH) color += lcolor;
         // russian roulette
-        else color += lcolor / continue_p;
+        else color += (lcolor / continue_p);
+    }
+*/
+
+    if (depth < MAX_DEPTH) {
+        // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
+        // random select between specular and diffuse
+        float s_p = f->Ks.Y() / (f->Ks.Y() + f->Kd.Y());
+        float rnd = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        
+        if (rnd < s_p) color += specularReflection(isect, f, depth+1) / s_p;
+        else color += diffuseReflection(isect, f, depth+1) / (1 - s_p);
     }
     
+    // II) AMOSTRAGEM DE MONTE CARLO DA ILUMINAÇÃO DIRETA
     // if there is a diffuse component do direct light
     if (!f->Kd.isZero()) color += directLightingMonteCarlo(isect,f);
     
@@ -61,12 +68,9 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
         
         if (light->type == AREA_LIGHT) { // is it an area light ?
             if (!f->Kd.isZero()) {
-                RGB L;
-                Point lpoint;
-                float l_pdf;
+                RGB L; Point lpoint; float l_pdf; float rnd[2];
+                
                 auto al = static_cast<AreaLight *> (light);
-
-                float rnd[2];
                 rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
                 rnd[1] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
                 L = al->Sample_L(rnd, &lpoint, l_pdf);
@@ -152,10 +156,10 @@ RGB PathTracerShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
 
 
 RGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth) {
+    Intersection s_isect;
     RGB color(0.,0.,0.);
     Vector s_dir;
     float pdf;
-    Intersection s_isect;
 
     // generate the specular ray
     float cos = isect.gn.dot(isect.wo);
@@ -207,8 +211,10 @@ RGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth
 
 
 RGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth) {
-    RGB color(0.,0.,0.); Vector dir; float pdf;
+    Intersection d_isect;
+    RGB color(0.,0.,0.);
 
+    // IV) AMOSTRAGEM DE MONTE CARLO DA COMPONENTE DIFUSA
     // actual direction distributed around N: 2 random number in [0,1[
     float rnd[2];
     rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -216,9 +222,9 @@ RGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth)
     
     Vector D_around_Z;
     float cos_theta = D_around_Z.Z = sqrtf(rnd[1]); // cos sampling
-    D_around_Z.Y = sinf(2.f*(float)M_PI*rnd[0])*sqrtf(1.0f-rnd[1]);
-    D_around_Z.X = cosf(2.f*(float)M_PI*rnd[0])*sqrtf(1.0f-rnd[1]);
-    pdf = cos_theta / (float)M_PI;
+    D_around_Z.Y = sinf(2.f * (float) M_PI * rnd[0]) * sqrtf(1.0f - rnd[1]);
+    D_around_Z.X = cosf(2.f * (float) M_PI * rnd[0]) * sqrtf(1.0f - rnd[1]);
+    float pdf = cos_theta / (float) M_PI;
     
     // generate a coordinate system from N
     Vector Rx, Ry;
@@ -227,11 +233,11 @@ RGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth)
     diffuse.adjustOrigin(isect.gn);
     
     // OK, we have the ray : trace and shade it recursively
-    bool intersected = scene->trace(diffuse, &isect);
+    bool intersected = scene->trace(diffuse, &d_isect);
     
     // if light source return 0 ; handled by direct
-    if (!isect.isLight) { // shade this intersection
-        RGB Rcolor = shade(intersected, isect, depth+1);
+    if (!d_isect.isLight) { // shade this intersection
+        RGB Rcolor = shade(intersected, d_isect, depth+1);
         color = (f->Kd * cos_theta * Rcolor) / pdf;
     }
 

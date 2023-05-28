@@ -5,10 +5,12 @@
 //  Created by Luis Paulo Santos on 06/04/2023.
 //
 
+
 #ifndef PointLight_hpp
 #define PointLight_hpp
 
 #include "light.hpp"
+
 
 class PointLight: public Light {
 public:

@@ -5,11 +5,14 @@
 //  Created by Luis Paulo Santos on 04/02/2023.
 //
 
+
 #ifndef light_hpp
 #define light_hpp
 
+#include "triangle.hpp"
 #include "vector.hpp"
 #include "RGB.hpp"
+
 
 enum LightType {
     NO_LIGHT,

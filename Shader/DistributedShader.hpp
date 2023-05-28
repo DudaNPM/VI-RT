@@ -1,11 +1,9 @@
 #ifndef DistributedShader_hpp
 #define DistributedShader_hpp
 
+
 #include "shader.hpp"
-#include "Phong.hpp"
-#include "RGB.hpp"
-#include "AreaLight.hpp"
-#include "light.hpp"
+
 
 class DistributedShader: public Shader {
     RGB background;

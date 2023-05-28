@@ -5,19 +5,29 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
-#include <iostream>
-#include "scene.hpp"
-#include "perspective.hpp"
-#include "renderer.hpp"
-#include "StandardRenderer.hpp"
-#include "ImagePPM.hpp"
-#include "AmbientShader.hpp"
-#include "WhittedShader.hpp"
+
 #include "DistributedShader.hpp"
 #include "PathTracerShader.hpp"
+#include "StandardRenderer.hpp"
+#include "AmbientShader.hpp"
+#include "WhittedShader.hpp"
 #include "AmbientLight.hpp"
+#include "perspective.hpp"
 #include "PointLight.hpp"
 #include "AreaLight.hpp"
+#include "renderer.hpp"
+#include "ImagePPM.hpp"
+#include "scene.hpp"
+
+#include <iostream>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
+#define NUM_THREADS 4
+#define SPP 16
+
 
 int main(int argc, const char * argv[]) {
     Scene scene;
@@ -31,11 +41,10 @@ int main(int argc, const char * argv[]) {
     // scene.print();
     
     if (!success) {
-        std::cout << "ERROR!! :o\n";
+        cout << "ERROR!! :o\n";
         return 1;
     }
     
-    srand(time(NULL));
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
     // add an ambient light to the scene
@@ -59,8 +68,8 @@ int main(int argc, const char * argv[]) {
     AreaLight *al07 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(417.00f,547.75f,489.30f),Point(417.00f,547.70f,419.40f),Point(486.50f,547.65f,419.40f),n);
     AreaLight *al08 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(486.50f,547.65f,419.40f),Point(417.00f,547.75f,489.30f),Point(486.50f,547.73f,489.30f),n);
     */
-    AreaLight *al09 = new AreaLight(RGB(0.000000001f,0.000000001f,0.000000001f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
-    AreaLight *al10 = new AreaLight(RGB(0.000000001f,0.000000001f,0.000000001f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
+    AreaLight *al09 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
+    AreaLight *al10 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
     /*
     scene.lights.push_back(al01); scene.numLights++;
     scene.lights.push_back(al02); scene.numLights++;
@@ -96,11 +105,25 @@ int main(int argc, const char * argv[]) {
     shd = new PathTracerShader(&scene, background);
     // declare the renderer
     StandardRenderer myRender(cam, &scene, img, shd);
+
+    // start execution time
+    auto start = high_resolution_clock::now();
+
     // render
-    myRender.Render();
+    // myRender.Render(SPP);
+    // myRender.RenderParallelOpenMP(NUM_THREADS,SPP);
+    myRender.RenderParallel(NUM_THREADS,SPP);
+
+    // stop execution time
+    auto stop = high_resolution_clock::now();
+
+    auto duration = duration_cast<seconds>(stop - start);
+
+    cout << "Execution time: " << duration.count() << " seconds" << endl;
+
     // save the image
-    img->Save("256spp.ppm");
+    img->Save("16spp_threads.ppm");
     
-    std::cout << "That's all, folks!" << std::endl;
+    cout << "That's all, folks!" << endl;
     return 0;
 }

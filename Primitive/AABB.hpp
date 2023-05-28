@@ -5,11 +5,13 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
+
 #ifndef AABB_hpp
 #define AABB_hpp
 
 #include "vector.hpp"
 #include "ray.hpp"
+
 
 typedef struct BB {
     Point min, max;

@@ -5,12 +5,18 @@
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
 
+
 #ifndef geometry_hpp
 #define geometry_hpp
 
+#include "intersection.hpp"
+#include "vector.hpp"
 #include "AABB.hpp"
 #include "ray.hpp"
-#include "intersection.hpp"
+
+#include <vector>
+#include <limits>
+
 
 class Geometry {
 public:

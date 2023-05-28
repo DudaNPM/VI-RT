@@ -8,10 +8,13 @@
 #ifndef perspective_hpp
 #define perspective_hpp
 
+
 #include "camera.hpp"
-#include "ray.hpp"
 #include "vector.hpp"
+#include "ray.hpp"
+
 #include <iostream>
+
 
 class Perspective: public Camera {
     Point Eye, At;
