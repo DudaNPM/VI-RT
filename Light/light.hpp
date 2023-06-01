@@ -18,7 +18,8 @@ enum LightType {
     NO_LIGHT,
     AMBIENT_LIGHT,
     POINT_LIGHT,
-    AREA_LIGHT
+    AREA_LIGHT,
+    INFINITE_LIGHT
 } ;
 
 class Light {
@@ -27,11 +28,11 @@ public:
     Light () {type=NO_LIGHT;}
     ~Light () {}
     // return the Light RGB radiance for a given point : p
-    virtual RGB L (Point p) {return RGB();}
+    virtual OurRGB L (Point p) {return OurRGB();}
     // return the Light RGB radiance
-    virtual RGB L () {return RGB();}
+    virtual OurRGB L () {return OurRGB();}
     // return a point p and RGB radiance for a given probability pair prob[2]
-    virtual RGB Sample_L (float *prob, Point *p) {return RGB();}
+    virtual OurRGB Sample_L (float *prob, Point *p) {return OurRGB();}
     // return the probability of p
     virtual float pdf(Point p) {return 1.;}
 };

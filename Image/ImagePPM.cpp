@@ -26,8 +26,8 @@ void ImagePPM::ToneMap() {
 void ImagePPM::ToneMap2() {
     imageToSave = new PPM_pixel[W*H];
 
-    RGB max = RGB();
-    RGB min = RGB(RAND_MAX,RAND_MAX,RAND_MAX);
+    OurRGB max = OurRGB();
+    OurRGB min = OurRGB(RAND_MAX,RAND_MAX,RAND_MAX);
 
     for (int j = 0 ; j< H ; j++) {
         for (int i = 0; i < W ; ++i) {

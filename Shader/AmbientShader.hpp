@@ -13,10 +13,10 @@
 
 
 class AmbientShader: public Shader {
-    RGB background;
+    OurRGB background;
 public:
-    AmbientShader (Scene *scene, RGB bg): background(bg), Shader(scene) {}
-    RGB shade (bool intersected, Intersection isect, int depth);
+    AmbientShader (Scene *scene, OurRGB bg): background(bg), Shader(scene) {}
+    OurRGB shade (bool intersected, Intersection isect, int depth);
 };
 
 #endif /* AmbientShader_hpp */

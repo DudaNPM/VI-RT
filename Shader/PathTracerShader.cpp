@@ -1,11 +1,34 @@
 #include "PathTracerShader.hpp"
+#include "vector.hpp"
 
 
-RGB PathTracerShader::shade(bool intersected, Intersection isect, int depth) {
-    RGB color(0.,0.,0.);
+OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, Ray ray) {
+    OurRGB color(0.,0.,0.);
     
     // if no intersection, return background
-    if (!intersected) return background;
+    if (!intersected){
+        bool hasInfinity = false;
+        Light *l;
+        for (auto& light: scene->lights) {
+            if (light->type == INFINITE_LIGHT ){
+                hasInfinity = true;
+                l = light;
+            }
+        }
+        if (hasInfinity && depth == 0){
+            auto al = static_cast<InfiniteAreaLight *> (l);
+                
+            Vector v = ray.dir;
+                //std::cout << v.X << " " << v.Y << " " << v.Z << std::endl;
+            v.normalize();
+            Vector theta_phi = al->dir_to_theta_phi(v);
+            Vector xy = al->theta_phi_to_xy(theta_phi.X,theta_phi.Y);
+            return al->bilerp(xy);
+        }else{
+            return background;
+        }
+
+    }
     
     // intersection with a light source
     if (isect.isLight) return isect.power;
@@ -44,16 +67,19 @@ RGB PathTracerShader::shade(bool intersected, Intersection isect, int depth) {
         else color += diffuseReflection(isect, f, depth+1) / (1 - s_p);
     }
     
+    
     // II) AMOSTRAGEM DE MONTE CARLO DA ILUMINAÇÃO DIRETA
     // if there is a diffuse component do direct light
     if (!f->Kd.isZero()) color += directLightingMonteCarlo(isect,f);
     
+    
+
     return color;
 }
 
 
-RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
-    RGB color(0.,0.,0.);
+OurRGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
+    OurRGB color(0.,0.,0.);
     
     for (auto& light: scene->lights) {
 
@@ -68,7 +94,7 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
         
         if (light->type == AREA_LIGHT) { // is it an area light ?
             if (!f->Kd.isZero()) {
-                RGB L; Point lpoint; float l_pdf; float rnd[2];
+                OurRGB L; Point lpoint; float l_pdf; float rnd[2];
                 
                 auto al = static_cast<AreaLight *> (light);
                 rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -101,8 +127,8 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
 }
 
 
-RGB PathTracerShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
-    RGB color(0.,0.,0.);
+OurRGB PathTracerShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
+    OurRGB color(0.,0.,0.);
 
     int n = scene->lights.size();
     int indx = rand() % n;
@@ -110,7 +136,7 @@ RGB PathTracerShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
 
     if (light->type == AMBIENT_LIGHT) { // is it an ambient light ?
         if (!f->Ka.isZero()) {
-                RGB Ka = f->Ka;
+                OurRGB Ka = f->Ka;
                 color = Ka * light->L();
         }
     }
@@ -121,7 +147,7 @@ RGB PathTracerShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
 
     else if (light->type == AREA_LIGHT) { // is it an area light ?
         if (!f->Kd.isZero()) {
-            RGB L;
+            OurRGB L;
             Point lpoint;
             float l_pdf;
             auto al = static_cast<AreaLight *> (light);
@@ -149,15 +175,47 @@ RGB PathTracerShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
                 }
             } // end cosL > 0.
         }
-    } // end area light
+    } else if(light->type == INFINITE_LIGHT){
+        
+        if (!f->Kd.isZero()) {
+            OurRGB L;
+            Point lpoint;
+            float l_pdf;
+            auto al = static_cast<InfiniteAreaLight *> (light);
+            float rnd[2];
+            rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            rnd[1] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            L = al->Sample_L(rnd, &lpoint, l_pdf);
+            //std::cout << lpoint.X << " " << lpoint.Y << " " << lpoint.Z << " "<< std::endl;
+            //std::cout << "LIGHT " << L.R << " "<< L.G << " " << L.B << std::endl;
+            
+            // compute the direction from the intersection point to the light source
+            Vector Ldir = isect.p.vec2point(lpoint);
+            const float Ldistance = Ldir.norm();
+            Ldir.normalize();
+            // cosine between Ldir and the shading normal at the intersection point
+            float cosL = Ldir.dot(isect.sn);
+            
+            // shade
+            if (cosL > 0.0) { // light NOT behind primitive AND light normal points to the ray o
+                Ray shadow(isect.p, Ldir); // generate the shadow ray
+                shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
+                
+                if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
+                    color = (f->Kd * L * cosL / l_pdf) * (float) n;
+                    //std::cout << "LIGHT " << color.R << " "<< color.G << " " << color.B << std::endl;
+                }
+            } // end cosL > 0.
+        }
+    }// end area light
 
     return color;
 }
 
 
-RGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth) {
+OurRGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth) {
     Intersection s_isect;
-    RGB color(0.,0.,0.);
+    OurRGB color(0.,0.,0.);
     Vector s_dir;
     float pdf;
 
@@ -173,7 +231,7 @@ RGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth
         bool intersected = scene->trace(specular, &s_isect);
         
         // shade this intersection
-        RGB Rcolor = shade(intersected, s_isect, depth+1);
+        OurRGB Rcolor = shade(intersected, s_isect, depth+1,specular);
         color = f->Ks * Rcolor;
         return color;
     }
@@ -202,7 +260,7 @@ RGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth
         specular.adjustOrigin(isect.gn);
         bool intersected = scene->trace(specular, &s_isect);
         
-        RGB Rcolor = shade(intersected, s_isect, depth+1);
+        OurRGB Rcolor = shade(intersected, s_isect, depth+1,specular);
         color = (f->Ks * Rcolor * powf(cos_theta, f->Ns)/(2.f*(float)M_PI)) / pdf;
         return color;
     }
@@ -210,9 +268,9 @@ RGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int depth
 
 
 
-RGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth) {
+OurRGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth) {
     Intersection d_isect;
-    RGB color(0.,0.,0.);
+    OurRGB color(0.,0.,0.);
 
     // IV) AMOSTRAGEM DE MONTE CARLO DA COMPONENTE DIFUSA
     // actual direction distributed around N: 2 random number in [0,1[
@@ -237,7 +295,7 @@ RGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth)
     
     // if light source return 0 ; handled by direct
     if (!d_isect.isLight) { // shade this intersection
-        RGB Rcolor = shade(intersected, d_isect, depth+1);
+        OurRGB Rcolor = shade(intersected, d_isect, depth+1,diffuse);
         color = (f->Kd * cos_theta * Rcolor) / pdf;
     }
 

@@ -14,11 +14,11 @@
 
 class Phong: public BRDF {
 public:
-    RGB Ka, Kd, Ks, Kt; // Tf == Kt
+    OurRGB Ka, Kd, Ks, Kt; // Tf == Kt
     float Ns;
 
 
-    Phong(RGB Ka, RGB Kd, RGB Ks, RGB Kt, float Ns);
+    Phong(OurRGB Ka, OurRGB Kd, OurRGB Ks, OurRGB Kt, float Ns);
 };
 
 #endif /* Phong_hpp */

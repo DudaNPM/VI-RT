@@ -146,10 +146,10 @@ bool Scene::Load (const std::string &fname) {
 
 
     for(auto& material : materials) {
-        RGB Ka = RGB(material.ambient[0], material.ambient[1], material.ambient[2]);
-        RGB Kd = RGB(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
-        RGB Ks = RGB(material.specular[0], material.specular[1], material.specular[2]);
-        RGB Kt = RGB(material.transmittance[0], material.transmittance[1], material.transmittance[2]);
+        OurRGB Ka = OurRGB(material.ambient[0], material.ambient[1], material.ambient[2]);
+        OurRGB Kd = OurRGB(material.diffuse[0], material.diffuse[1], material.diffuse[2]);
+        OurRGB Ks = OurRGB(material.specular[0], material.specular[1], material.specular[2]);
+        OurRGB Kt = OurRGB(material.transmittance[0], material.transmittance[1], material.transmittance[2]);
         float Ns = material.shininess;
 
         auto phong = std::make_shared<Phong>(Ka, Kd, Ks, Kt, Ns);

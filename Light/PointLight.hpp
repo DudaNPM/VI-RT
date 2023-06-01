@@ -14,16 +14,16 @@
 
 class PointLight: public Light {
 public:
-    RGB color;
+    OurRGB color;
     Point pos;
-    PointLight (RGB _color, Point _pos): color(_color), pos(_pos) { type = POINT_LIGHT; }
+    PointLight (OurRGB _color, Point _pos): color(_color), pos(_pos) { type = POINT_LIGHT; }
     ~PointLight () {}
     // return the Light RGB radiance for a given point : p
-    RGB L (Point p) {return color;}
+    OurRGB L (Point p) {return color;}
     // return the Light RGB radiance
-    RGB L () {return color;}
+    OurRGB L () {return color;}
     // return a point p and RGB radiance for a given probability pair prob[2]
-    RGB Sample_L (float *prob, Point *p) {
+    OurRGB Sample_L (float *prob, Point *p) {
         *p = pos;
         return color;
     }

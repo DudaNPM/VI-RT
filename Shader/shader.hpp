@@ -11,12 +11,14 @@
 
 #define _USE_MATH_DEFINES
 
+#include "InfiniteAreaLight.hpp"
 #include "AreaLight.hpp"
 #include "scene.hpp"
 #include "Phong.hpp"
 #include "light.hpp"
 #include "RGB.hpp"
 #include "ray.hpp"
+#include "vector.hpp"
 
 
 class Shader {
@@ -25,7 +27,7 @@ protected:
 public:
     Shader (Scene *_scene): scene(_scene) {}
     ~Shader () {}
-    virtual RGB shade (bool intersected, Intersection isect, int depth) {return RGB();}
+    virtual OurRGB shade (bool intersected, Intersection isect, int depth,Ray ray) {return OurRGB();}
 };
 
 #endif /* shader_hpp */

@@ -1,8 +1,8 @@
 #include "DistributedShader.hpp"
 
 
-RGB DistributedShader::shade(bool intersected, Intersection isect, int depth) {
-    RGB color(0.,0.,0.);
+OurRGB DistributedShader::shade(bool intersected, Intersection isect, int depth) {
+    OurRGB color(0.,0.,0.);
     
     // if no intersection, return background
     if (!intersected) return background;
@@ -22,8 +22,8 @@ RGB DistributedShader::shade(bool intersected, Intersection isect, int depth) {
 }
 
 
-RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
-    RGB color(0.,0.,0.);
+OurRGB DistributedShader::directLighting(Intersection isect, Phong *f) {
+    OurRGB color(0.,0.,0.);
     
     for (auto& light: scene->lights) {
 
@@ -38,7 +38,7 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
         
         if (light->type == AREA_LIGHT) { // is it an area light ?
             if (!f->Kd.isZero()) {
-                RGB L;
+                OurRGB L;
                 Point lpoint;
                 float l_pdf;
                 auto al = static_cast<AreaLight *> (light);
@@ -73,8 +73,8 @@ RGB DistributedShader::directLighting(Intersection isect, Phong *f) {
 }
 
 
-RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
-    RGB color(0.,0.,0.);
+OurRGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
+    OurRGB color(0.,0.,0.);
 
     int n = scene->lights.size();
     int indx = rand() % n;
@@ -82,7 +82,7 @@ RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
 
     if (light->type == AMBIENT_LIGHT) { // is it an ambient light ?
         if (!f->Ka.isZero()) {
-                RGB Ka = f->Ka;
+                OurRGB Ka = f->Ka;
                 color = Ka * light->L();
         }
     }
@@ -93,7 +93,7 @@ RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
 
     else if (light->type == AREA_LIGHT) { // is it an area light ?
         if (!f->Kd.isZero()) {
-            RGB L;
+            OurRGB L;
             Point lpoint;
             float l_pdf;
             auto al = static_cast<AreaLight *> (light);
@@ -127,7 +127,7 @@ RGB DistributedShader::directLightingMonteCarlo(Intersection isect, Phong *f) {
 }
 
 
-RGB DistributedShader::specularReflection(Intersection isect, Phong *f) {
+OurRGB DistributedShader::specularReflection(Intersection isect, Phong *f) {
     // generate the specular ray
     float cos = isect.gn.dot(isect.wo);
     Vector Rdir = 2.f * cos * isect.gn - isect.wo;
@@ -139,6 +139,6 @@ RGB DistributedShader::specularReflection(Intersection isect, Phong *f) {
     bool intersected = scene->trace(specular, &s_isect);
     
     // shade this intersection
-    RGB color = shade(intersected, s_isect, 0);
+    OurRGB color = shade(intersected, s_isect, 0);
     return color;
 }

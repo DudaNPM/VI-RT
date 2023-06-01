@@ -4,13 +4,12 @@
 //
 //  Created by Luis Paulo Santos on 30/01/2023.
 //
-
-
 #ifndef vector_hpp
 #define vector_hpp
-
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <cmath>
-
+#include "EnvMap.hpp"
 
 class Vector {
 public:
@@ -93,6 +92,19 @@ public:
         vec.Z = X * Rx.Z + Y * Ry.Z + Z * Rz.Z;
         return vec;
     }
+    float vec_to_SphericalTheta(){
+        return (float) acos(clamp(Y/sqrt(X*X + Y*Y + Z*Z),-1.f,1.f));
+
+    }
+    float vec_to_SphericalPhi(){
+        float p = atan2(X,Z);
+        return (p < 0) ? (p + 2 * M_PI) : p;
+    }
+    inline Vector unit( void ) const {
+        double rNorm = 1. / sqrt( X*X + Y*Y + Z*Z );
+        return Vector( rNorm*X, rNorm*Y, rNorm*Z );
+    }
+
 };
 
 class Point {

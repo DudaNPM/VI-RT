@@ -23,12 +23,13 @@
 
 class Scene {
 private:
-    std::vector<Point> vertices;
+
     std::vector<Vector> normals;
     std::vector <Primitive> prims;
     std::vector <std::shared_ptr<BRDF>> BRDFs;
 public:
     std::vector <Light *> lights;
+    std::vector<Point> vertices;
     int numPrimitives, numLights, numBRDFs;
     
     Scene (): numPrimitives(0), numLights(0), numBRDFs(0) {}

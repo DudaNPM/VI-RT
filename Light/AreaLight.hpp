@@ -7,24 +7,24 @@
 
 class AreaLight: public Light {
 public:
-    RGB intensity, power;
+    OurRGB intensity, power;
     Triangle *gem;
     float pdf;
 
-    AreaLight(RGB _power, Point _v1, Point _v2, Point _v3, Vector _n): power(_power) {
+    AreaLight(OurRGB _power, Point _v1, Point _v2, Point _v3, Vector _n): power(_power) {
         type = AREA_LIGHT;
         gem = new Triangle(_v1,_v2,_v3,_n);
         pdf = 1.0f / gem->area(); // for uniform sampling the area
         intensity = _power * pdf;
     }
 
-    RGB L() { return intensity; }
+    OurRGB L() { return intensity; }
 
     ~AreaLight () {delete gem;}
 
     // return a point p, RGB radiance and pdf given a rand pair (0, 1(
     // sample point: "Globbbl Illumination Compendium", pp. 12, item 18
-    RGB Sample_L (float *r, Point *p, float &_pdf) {
+    OurRGB Sample_L (float *r, Point *p, float &_pdf) {
         const float sqrt_r0 = sqrtf(r[0]);
         const float alpha = 1.f - sqrt_r0;
         const float beta = (1.f-r[1]) * sqrt_r0;

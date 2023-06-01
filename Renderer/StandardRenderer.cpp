@@ -15,12 +15,18 @@ void StandardRenderer::Render(int spp) {
     this->cam->getResolution(&W, &H);
     
     // main rendering loop: get primary rays from the camera until done
-    for (y=0; y<H; y++) {  // loop over rows
+    for (y=0; y<H; y++) { 
+        
         for (x=0; x<W; x++) { // loop over columns
-            RGB color(0.,0.,0.);
-            
+            OurRGB color(0.,0.,0.);
+
             for(int ss=0; ss<spp; ss++) {
-                Ray primary; Intersection isect; bool intersected; RGB this_color;
+                Ray primary; Intersection isect; bool intersected; OurRGB this_color;
+                if (y == 374 && x == 332 && ss == 24){
+                    std::cout << "Inicial" <<std::endl;
+                }
+            
+
                 
                 // I) AMOSTRAGEM DE MONTE CARLO DO PIXEL
                 float jitterV[2];
@@ -29,20 +35,34 @@ void StandardRenderer::Render(int spp) {
             
                 // Generate Ray (camera)
                 cam->GenerateRay(x,y,&primary,jitterV);
-                
+                    if (y == 374 && x == 332 && ss == 24){
+                    std::cout << "Inicial2" <<std::endl;
+                }
                 // trace ray (scene)
                 intersected = scene->trace(primary, &isect);
-
+                if (y == 374 && x == 332 && ss == 24){
+                    std::cout << "Inicial3" <<std::endl;
+                }
+                
                 // shade this intersection (shader)
-                this_color = shd->shade(intersected, isect, 0);
+                this_color = shd->shade(intersected, isect, 0, primary);
+                if (y == 374 && x == 332 && ss == 24){
+                    std::cout << "Inicial4" <<std::endl;
+                }
                 color += this_color;
+
             }
 
             color = color / (float) spp;
+            
             // write the result into the image frame buffer (image)
             img->set(x,y,color);
+
+            
         }
+
     }
+    std::cout<<"YOOOOO"<<std::endl;
 }
 
 
@@ -59,15 +79,16 @@ void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int 
 
     int start = (H / numThreads) * threadId;
     int final = (H / numThreads) * (threadId + 1);
+    std::cout<<"YOOOOO"<<std::endl;
 
     srand(threadId);
 
     for (int y = start; y < final && y < H; y++) {
         for (int x = 0; x < W; x++) {
-            RGB color(0.,0.,0.);
+            OurRGB color(0.,0.,0.);
             
             for(int ss=0; ss<spp; ss++) {
-                Ray primary; Intersection isect; bool intersected; RGB this_color;
+                Ray primary; Intersection isect; bool intersected; OurRGB this_color;
                 
                 // I) AMOSTRAGEM DE MONTE CARLO DO PIXEL
                 float jitterV[2];
@@ -81,7 +102,7 @@ void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int 
                 intersected = renderer->scene->trace(primary, &isect);
 
                 // shade this intersection (shader)
-                this_color = renderer->shd->shade(intersected, isect, 0);
+                this_color = renderer->shd->shade(intersected, isect, 0,primary);
                 color += this_color;
             }
 
@@ -158,10 +179,10 @@ void StandardRenderer::RenderParallelOpenMP(int num_threads, int spp) {
     #pragma omp parallel for num_threads(num_threads) schedule(dynamic, H/num_threads)
     for (int y=0; y<H; y++) {  // loop over rows
         for (int x=0; x<W; x++) { // loop over columns
-            RGB color(0.,0.,0.);
+            OurRGB color(0.,0.,0.);
             
             for(int ss=0; ss<spp; ss++) {
-                Ray primary; Intersection isect; bool intersected; RGB this_color;
+                Ray primary; Intersection isect; bool intersected; OurRGB this_color;
                 
                 // I) AMOSTRAGEM DE MONTE CARLO DO PIXEL
                 float jitterV[2];
@@ -175,7 +196,7 @@ void StandardRenderer::RenderParallelOpenMP(int num_threads, int spp) {
                 intersected = scene->trace(primary, &isect);
 
                 // shade this intersection (shader)
-                this_color = shd->shade(intersected, isect, 0);
+                this_color = shd->shade(intersected, isect, 0,primary);
                 color += this_color;
             }
 

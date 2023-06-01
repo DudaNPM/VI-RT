@@ -18,23 +18,23 @@
 
 class Image {
 protected:
-    RGB *imagePlane;
+    OurRGB *imagePlane;
     int W,H;
 public:
     Image(): W(0),H(0),imagePlane(NULL) {}
     Image(const int W, const int H): W(W),H(H) {
-        imagePlane = new RGB[W*H];
-        memset((void *)imagePlane, 0, W*H*sizeof(RGB));  // set image plane to 0
+        imagePlane = new OurRGB[W*H];
+        memset((void *)imagePlane, 0, W*H*sizeof(OurRGB));  // set image plane to 0
     }
     ~Image() {
         if (imagePlane!=NULL) delete[] imagePlane;
     }
-    bool set (int x, int y, const RGB &rgb) {
+    bool set (int x, int y, const OurRGB &rgb) {
         if (x>W || y>H) return false;
         imagePlane[y*W+x] = rgb;
         return true;
     }
-    bool add (int x, int y, const RGB &rgb) {
+    bool add (int x, int y, const OurRGB &rgb) {
         if (x>W || y>H) return false;
         imagePlane[y*W+x] += rgb;
         return true;

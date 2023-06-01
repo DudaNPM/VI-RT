@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 
 project(Renderer)
 add_subdirectory(Scene/tinyobjloader)
+add_subdirectory(./tinyexr-release)
 
 add_executable(renderer
                 Camera/perspective.cpp
@@ -19,4 +20,5 @@ add_executable(renderer
 target_include_directories(renderer PRIVATE "3DSortingStruct/" "Camera/" "Image/" "Light/" "Primitive/" "Primitive/BRDF" "Primitive/Geometry" "Rays/" "Renderer/" "Scene/" "Shader/" "utils/" )
 
 find_package(OpenMP)
-target_link_libraries(renderer tinyobjloader OpenMP::OpenMP_CXX)
+
+target_link_libraries(renderer tinyobjloader  tinyexr OpenMP::OpenMP_CXX)

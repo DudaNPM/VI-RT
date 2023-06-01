@@ -9,15 +9,15 @@
 #include "WhittedShader.hpp"
 
 
-RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
-    RGB color(0.,0.,0.);
+OurRGB WhittedShader::directLighting (Intersection isect, Phong *f) {
+    OurRGB color(0.,0.,0.);
     
     // Loop over scene's light sources
     for (auto& light : scene->lights) {
         
         if (light->type == AMBIENT_LIGHT) {  // is it an ambient light ?
             if (!f->Ka.isZero()) {
-                RGB Ka = f->Ka;
+                OurRGB Ka = f->Ka;
                 color += Ka * light->L();
             }
             continue;
@@ -28,7 +28,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
                 Point lpoint;
 
                 // get the position and radiance of the light source
-                RGB L = light->Sample_L(NULL, &lpoint);
+                OurRGB L = light->Sample_L(NULL, &lpoint);
 
                 // compute the direction from the intersection to the light
                 Vector Ldir = isect.p.vec2point(lpoint);
@@ -53,7 +53,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
     return color;
 }
 
-RGB WhittedShader::specularReflection (Intersection isect, Phong *f) {
+OurRGB WhittedShader::specularReflection (Intersection isect, Phong *f) {
     // generate the specular ray
     float cos = isect.gn.dot(isect.wo);
     Vector Rdir = 2.f * cos * isect.gn - isect.wo;
@@ -65,12 +65,12 @@ RGB WhittedShader::specularReflection (Intersection isect, Phong *f) {
     bool intersected = scene->trace(specular, &s_isect);
     
     // shade this intersection
-    RGB color = shade(intersected, s_isect, 0);
+    OurRGB color = shade(intersected, s_isect, 0);
     return color;
 }
 
-RGB WhittedShader::shade(bool intersected, Intersection isect, int depth) {
-    RGB color(0.,0.,0.);
+OurRGB WhittedShader::shade(bool intersected, Intersection isect, int depth) {
+    OurRGB color(0.,0.,0.);
     
     // if no intersection, return background
     if (!intersected) return background;

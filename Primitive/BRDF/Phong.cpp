@@ -9,7 +9,7 @@
 #include "Phong.hpp"
 
 
-Phong::Phong(RGB Ka, RGB Kd, RGB Ks, RGB Kt, float Ns) {
+Phong::Phong(OurRGB Ka, OurRGB Kd, OurRGB Ks, OurRGB Kt, float Ns) {
     this->Ka = Ka;
     this->Kd = Kd;
     this->Ks = Ks;
