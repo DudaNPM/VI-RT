@@ -279,7 +279,7 @@ int main(int argc, const char * argv[]) {
     cout << "Execution time: " << duration.count() << " seconds" << endl;
 
     // save the image
-    img->Save("16spp_threads.ppm");
+    img->Save("32spp_com_rr.ppm");
     
     cout << "That's all, folks!" << endl;
     return 0;

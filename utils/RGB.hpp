@@ -9,6 +9,8 @@
 #ifndef RGB_hpp
 #define RGB_hpp
 
+#include <iostream>
+
 
 class OurRGB {
 public:
@@ -86,7 +88,6 @@ public:
     bool isZero () {
         return ((R==0.) && (G==0.) && (B==0.));
     }
-
 };
 
 inline OurRGB operator*(float s, const OurRGB &c) { return c * s; }
