@@ -9,6 +9,8 @@
 #ifndef RGB_hpp
 #define RGB_hpp
 
+#include <iostream>
+
 
 class RGB {
 public:
@@ -29,6 +31,14 @@ public:
         res.R = R + obj.R;
         res.G = G + obj.G;
         res.B = B + obj.B;
+        return res;
+    }
+    RGB operator+(float x)
+    {
+        RGB res;
+        res.R = R + x;
+        res.G = G + x;
+        res.B = B + x;
         return res;
     }
     RGB operator*(RGB const& obj)
@@ -68,6 +78,11 @@ public:
     }
     bool isZero () {
         return ((R==0.) && (G==0.) && (B==0.));
+    }
+    void Clamp() {
+        R = std::max(0.0f, std::min(R, 1.0f));
+        G = std::max(0.0f, std::min(G, 1.0f));
+        B = std::max(0.0f, std::min(B, 1.0f));
     }
 };
 

@@ -25,8 +25,8 @@
 using namespace std;
 using namespace std::chrono;
 
-#define NUM_THREADS 4
-#define SPP 16
+#define NUM_THREADS 6
+#define SPP 32
 
 
 int main(int argc, const char * argv[]) {
@@ -68,8 +68,8 @@ int main(int argc, const char * argv[]) {
     AreaLight *al07 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(417.00f,547.75f,489.30f),Point(417.00f,547.70f,419.40f),Point(486.50f,547.65f,419.40f),n);
     AreaLight *al08 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(486.50f,547.65f,419.40f),Point(417.00f,547.75f,489.30f),Point(486.50f,547.73f,489.30f),n);
     */
-    AreaLight *al09 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
-    AreaLight *al10 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
+    AreaLight *al09 = new AreaLight(RGB(0.5f,0.5f,0.5f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
+    AreaLight *al10 = new AreaLight(RGB(0.5f,0.5f,0.5f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
     /*
     scene.lights.push_back(al01); scene.numLights++;
     scene.lights.push_back(al02); scene.numLights++;
@@ -122,7 +122,7 @@ int main(int argc, const char * argv[]) {
     cout << "Execution time: " << duration.count() << " seconds" << endl;
 
     // save the image
-    img->Save("16spp_threads.ppm");
+    img->Save("32spp_com_rr.ppm");
     
     cout << "That's all, folks!" << endl;
     return 0;

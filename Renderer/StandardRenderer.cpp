@@ -46,13 +46,7 @@ void StandardRenderer::Render(int spp) {
 }
 
 
-int intRand(const int & min, const int & max) {
-    static thread_local std::mt19937 generator;
-    std::uniform_int_distribution<int> distribution(min,max);
-    return distribution(generator);
-}
-
-
+/*
 void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int spp) {
     int W, H;
     renderer->cam->getResolution(&W, &H);
@@ -91,10 +85,11 @@ void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int 
         }
     }
 }
+*/
 
 
 
-/*
+
 void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int spp) {
     int W, H;
     renderer->cam->getResolution(&W, &H);
@@ -130,7 +125,7 @@ void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int 
         }
     }
 }
-*/
+
 
 
 
@@ -155,7 +150,7 @@ void StandardRenderer::RenderParallelOpenMP(int num_threads, int spp) {
     this->cam->getResolution(&W, &H);
     
     // main rendering loop: get primary rays from the camera until done
-    #pragma omp parallel for num_threads(num_threads) schedule(dynamic, H/num_threads)
+    #pragma omp parallel for num_threads(num_threads)
     for (int y=0; y<H; y++) {  // loop over rows
         for (int x=0; x<W; x++) { // loop over columns
             RGB color(0.,0.,0.);
