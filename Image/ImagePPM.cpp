@@ -207,9 +207,9 @@ void ImagePPM::ToneMap8() {
     float saturationFactor = 0.4f;  // Saturation factor
     float detailFactor = 1.0f;      // Detail factor
 
-    // float contrastFactor = 2.0f;    // Contrast factor
-    // float saturationFactor = 0.7f;  // Saturation factor
-    // float detailFactor = 1.0f;      // Detail factor
+    //float contrastFactor = 2.0f;    // Contrast factor
+    //float saturationFactor = 0.7f;  // Saturation factor
+    //float detailFactor = 1.0f;      // Detail factor
     
     // Loop over each pixel in the image, apply tone mapping, clamp, and convert to byte format
     for (int j = 0; j < H; j++) {

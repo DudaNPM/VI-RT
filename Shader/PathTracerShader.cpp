@@ -15,7 +15,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
                 l = light;
             }
         }
-        if (hasInfinity && depth == 0) {
+        if (hasInfinity) {
             auto al = static_cast<InfiniteAreaLight *> (l);
                 
             Vector v = ray.dir;
@@ -23,7 +23,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
             v.normalize();
             Vector theta_phi = al->dir_to_theta_phi(v);
             Vector xy = al->theta_phi_to_xy(theta_phi.X,theta_phi.Y);
-            return al->bilerp(xy);
+            return 10.0f * al->bilerp(xy);
         } else {
             return background;
         }
@@ -38,6 +38,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
 
 
     // V) PARAGEM DA RECURSIVIDADE USANDO ROLETA RUSSA
+    /*
     float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     if (rnd_russian < continue_p) {
         OurRGB lcolor(0.,0.,0.);
@@ -53,6 +54,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
         // russian roulette
         color += (lcolor / continue_p);
     }
+    */
 /*
  float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     if (depth < MAX_DEPTH || rnd_russian < continue_p) {
@@ -72,7 +74,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
         else color += (lcolor / continue_p);
     }*/
 
-/*
+
     if (depth < MAX_DEPTH) {
         // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
         // random select between specular and diffuse
@@ -82,7 +84,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
         if (rnd < s_p) color += specularReflection(isect, f, depth+1) / s_p;
         else color += diffuseReflection(isect, f, depth+1) / (1 - s_p);
     }
-    */
+
     
     
     // II) AMOSTRAGEM DE MONTE CARLO DA ILUMINAÇÃO DIRETA
@@ -165,9 +167,9 @@ OurRGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
                 if (cosL > 0.0) { // light NOT behind primitive AND light normal points to the ray o
                     Ray shadow(isect.p, Ldir); // generate the shadow ray
                     shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
-                    
+                    color += (f->Kd * L * cosL / l_pdf);
                     if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
-                        color += (f->Kd * L * cosL / l_pdf);
+                        
                         //std::cout << "LIGHT " << color.R << " "<< color.G << " " << color.B << std::endl;
                     }
                 } // end cosL > 0.

@@ -54,9 +54,10 @@ public:
         // Convert direction vector to spherical coordinates (theta, phi)
         // theta: inclination angle (0 to pi)
         // phi: azimuthal angle (0 to 2*pi)
-        // dir.unit();
+        dir.unit();
         float theta = acos(dir.Y);
         float phi = atan2(dir.X, dir.Z);
+
         return Vector(theta, phi, 0.f);
     }
 
@@ -67,7 +68,7 @@ public:
 
         uint32_t w = envMap->w, h = envMap->h;
 
-        float u = (phi + M_PI / 2.0f) / M_PI; // Map phi to range [0, 1]
+        float u = ((phi + M_PI) / 2.0f) / M_PI; // Map phi to range [0, 1]
         float v = theta / M_PI;      // Map theta to range [0, 1]
 
         float x = u * w; // Map u to range [0, width-1]
@@ -80,28 +81,29 @@ public:
     //global illumination compendium uniform sampling sphere
     OurRGB Sample_L (float *r, Point *p, float &_pdf) {
         
-        // p->X = worldCenter.X + 2 * worldRadius * cos(2 * M_PI * r[0]) * sqrt(r[1] * (1 - r[1]));
-        // p->Y = worldCenter.Y + 2 * worldRadius * sin(2 * M_PI * r[0]) * sqrt(r[1] * (1 - r[1]));
-        // p->Z = worldCenter.Z + worldRadius * (1 -2 * r[1]);
+        p->X = worldCenter.X + 2 * worldRadius * cos(2 * M_PI * r[0]) * sqrt(r[1] * (1 - r[1]));
+        p->Y = worldCenter.Y + worldRadius * (1 -2 * r[1]);
+        p->Z = worldCenter.Z + 2 * worldRadius * sin(2 * M_PI * r[0]) * sqrt(r[1] * (1 - r[1]));
         
-        
+        /*
         double z = r[0];
-        double sinTheta = sqrt(std::max(0.0, 1.0f - z * z));
+        double Theta = 2 * M_PI * r[0];
 
-        double phi = 2.0f * M_PI * r[1];
-        Vector x = Vector(cos(phi) * sinTheta, sin(phi) * sinTheta, z);
+        double phi = acos(1 - 2 * r[1]);
+        Vector x = Vector(sin(phi) * cos(Theta),cos(phi), sin(phi) * sin(Theta));
 
         p->X = x.X;
         p->Y = x.Y;
         p->Z = x.Z;
+        */
 
-        // Vector zz(p->X, p->Y, p->Z);
-        // zz.normalize();
+        Vector zz(p->X, p->Y, p->Z);
+        zz.normalize();
         // float thetaz = 2 * M_PI * r[0];
         // float phiz = acos(1-2*r[1]);
-        float theta = dir_to_theta_phi(x).X;
-        float phiz = dir_to_theta_phi(x).Y;
-        Vector xy = theta_phi_to_xy(theta,phiz);
+        Vector vec = dir_to_theta_phi(zz);
+        
+        Vector xy = theta_phi_to_xy(vec.X,vec.Y);
 
         //std::cout << this->worldCenter.X <<" "<< this->worldCenter.Y<< " " << std::endl;
         //std::cout << xy.X<<" "<< xy.Y<< " " << std::endl;
