@@ -29,8 +29,8 @@
 using namespace std;
 using namespace std::chrono;
 
-#define NUM_THREADS 4
-#define SPP 64
+#define NUM_THREADS 1
+#define SPP 1
 #define TINYEXR_IMPLEMENTATION
 #include "./tinyexr-release/tinyexr.h"
 
@@ -98,9 +98,7 @@ HDRImageBuffer* load_exr(const char* file_path) {
     float* channel_g = (float*) exr_image.images[1];
     float* channel_b = (float*) exr_image.images[0];
     for (size_t i = 0; i < exr_image.width * exr_image.height; i++) {
-        envmap->data[i] = OurRGB(channel_r[i], 
-                               channel_g[i], 
-                               channel_b[i]);
+        envmap->data[i] = OurRGB(channel_r[i], channel_g[i], channel_b[i]);
     }
     FreeEXRImage(&exr_image);
     FreeEXRHeader(&exr_header);
@@ -178,8 +176,8 @@ int main(int argc, const char * argv[]) {
     Shader *shd;
     bool success;
     
-    success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
-    //success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
     // scene.print();
     
     if (!success) {
@@ -190,7 +188,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Scene Load: SUCCESS!! :-)\n";
 
     // add an ambient light to the scene
-    AmbientLight *ambient = new AmbientLight(OurRGB(0,0,0));
+    AmbientLight *ambient = new AmbientLight(OurRGB());
     scene.lights.push_back(ambient); scene.numLights++;
 
     // add a point light to the scene
@@ -210,8 +208,8 @@ int main(int argc, const char * argv[]) {
     AreaLight *al07 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(417.00f,547.75f,489.30f),Point(417.00f,547.70f,419.40f),Point(486.50f,547.65f,419.40f),n);
     AreaLight *al08 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(486.50f,547.65f,419.40f),Point(417.00f,547.75f,489.30f),Point(486.50f,547.73f,489.30f),n);
     */
-    //AreaLight *al09 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
-    //AreaLight *al10 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
+    AreaLight *al09 = new AreaLight(OurRGB(0.5f,0.5f,0.5f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
+    AreaLight *al10 = new AreaLight(OurRGB(0.5f,0.5f,0.5f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
     /*
     scene.lights.push_back(al01); scene.numLights++;
     scene.lights.push_back(al02); scene.numLights++;
@@ -222,18 +220,19 @@ int main(int argc, const char * argv[]) {
     scene.lights.push_back(al07); scene.numLights++;
     scene.lights.push_back(al08); scene.numLights++;
     */
-    //scene.lights.push_back(al09); scene.numLights++;
-    //scene.lights.push_back(al10); scene.numLights++;
+    scene.lights.push_back(al09); scene.numLights++;
+    scene.lights.push_back(al10); scene.numLights++;
 
-    Point worldCenter;
-    float worldRadius;
-    ritterBoundingSphere(scene.vertices, worldCenter, worldRadius);
-    std::cout << "worldCenter: " << worldCenter.X <<" "<< worldCenter.Y << " "<< worldCenter.Z << std::endl;
-    std::cout << "worldRadius " << worldRadius << std::endl;
+    // Point worldCenter;
+    // float worldRadius;
+    // ritterBoundingSphere(scene.vertices, worldCenter, worldRadius);
+    // std::cout << "worldCenter: " << worldCenter.X <<" "<< worldCenter.Y << " "<< worldCenter.Z << std::endl;
+    // std::cout << "worldRadius " << worldRadius << std::endl;
 
-    HDRImageBuffer * imgEXR = load_exr("C:\\Users\\uncha\\Documents\\Masters\\VI\\Project\\VI-RT\\grace.exr");
-    InfiniteAreaLight * light = new InfiniteAreaLight(imgEXR, worldCenter, worldRadius);
-    scene.lights.push_back(light);
+    // HDRImageBuffer * imgEXR = load_exr("C:/Users/duart/Desktop/VI/VI-RT/field.exr");
+    // InfiniteAreaLight * light = new InfiniteAreaLight(imgEXR, worldCenter, worldRadius);
+    // scene.lights.push_back(light);
+    
     scene.printSummary();
 
 
@@ -256,7 +255,7 @@ int main(int argc, const char * argv[]) {
     cam = new Perspective(Eye, At, Up, W, H, fovW, fovH);
     
     // create the shader
-    OurRGB background(0,0,0);
+    OurRGB background(0.05f, 0.05f, 0.55f);
     shd = new PathTracerShader(&scene, background);
     // declare the renderer
     StandardRenderer myRender(cam, &scene, img, shd);
@@ -265,10 +264,9 @@ int main(int argc, const char * argv[]) {
     auto start = high_resolution_clock::now();
 
     // render
-    myRender.Render(SPP);
-    
+    // myRender.Render(SPP);
+    myRender.RenderParallel(NUM_THREADS,SPP);
     // myRender.RenderParallelOpenMP(NUM_THREADS,SPP);
-    //myRender.RenderParallel(NUM_THREADS,SPP);
 
     // stop execution time
     auto stop = high_resolution_clock::now();
@@ -279,7 +277,7 @@ int main(int argc, const char * argv[]) {
     cout << "Execution time: " << duration.count() << " seconds" << endl;
 
     // save the image
-    img->Save("32spp_com_rr.ppm");
+    img->Save("1sppssss_com_rr.ppm");
     
     cout << "That's all, folks!" << endl;
     return 0;

@@ -33,6 +33,14 @@ public:
         res.B = B + obj.B;
         return res;
     }
+    OurRGB operator+(float x)
+    {
+        OurRGB res;
+        res.R = R + x;
+        res.G = G + x;
+        res.B = B + x;
+        return res;
+    }
     OurRGB operator*(OurRGB const& obj)
     {
         OurRGB res;
@@ -87,6 +95,11 @@ public:
     }
     bool isZero () {
         return ((R==0.) && (G==0.) && (B==0.));
+    }
+    void Clamp() {
+        R = std::max(0.0f, std::min(R, 1.0f));
+        G = std::max(0.0f, std::min(G, 1.0f));
+        B = std::max(0.0f, std::min(B, 1.0f));
     }
 };
 

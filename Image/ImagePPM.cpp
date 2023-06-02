@@ -7,6 +7,7 @@
 
 
 #include "ImagePPM.hpp"
+#include "EnvMap.hpp"
 
 
 void ImagePPM::ToneMap() {
@@ -87,7 +88,7 @@ void ImagePPM::ToneMap4() {
 void ImagePPM::ToneMap5() {
     imageToSave = new PPM_pixel[W*H];
     
-    RGB max = RGB();
+    OurRGB max = OurRGB();
 
     for (int j = 0 ; j< H ; j++) {
         for (int i = 0; i < W ; ++i) {
@@ -120,10 +121,10 @@ void ImagePPM::ToneMap6() {
     for (int j = 0; j < H; j++) {
         for (int i = 0; i < W; ++i) {
             // Retrieve the pixel color from the HDR image
-            RGB pixelColor = imagePlane[j * W + i];
+            OurRGB pixelColor = imagePlane[j * W + i];
             
             // Apply Reinhard et al. tone mapping
-            RGB tonedPixelColor = pixelColor / (pixelColor + key);
+            OurRGB tonedPixelColor = pixelColor / (pixelColor + key);
             tonedPixelColor = tonedPixelColor * ((tonedPixelColor / (L_white * L_white)) + 1.0f);
             
             // Clamp the pixel color to ensure it stays within the valid range
@@ -153,10 +154,10 @@ void ImagePPM::ToneMap7() {
     for (int j = 0; j < H; j++) {
         for (int i = 0; i < W; ++i) {
             // Retrieve the pixel color from the HDR image
-            RGB pixelColor = imagePlane[j * W + i];
+            OurRGB pixelColor = imagePlane[j * W + i];
             
             // Apply ACES tone mapping
-            RGB mappedColor;
+            OurRGB mappedColor;
             mappedColor.R = (pixelColor.R * (a * pixelColor.R + b)) / (pixelColor.R * (c * pixelColor.R + d) + e);
             mappedColor.G = (pixelColor.G * (a * pixelColor.G + b)) / (pixelColor.G * (c * pixelColor.G + d) + e);
             mappedColor.B = (pixelColor.B * (a * pixelColor.B + b)) / (pixelColor.B * (c * pixelColor.B + d) + e);
@@ -173,7 +174,7 @@ void ImagePPM::ToneMap7() {
 }
 
 
-RGB Mantiuk_ToneMap(RGB& hdrColor, float contrastFactor, float saturationFactor, float detailFactor) {
+OurRGB Mantiuk_ToneMap(OurRGB& hdrColor, float contrastFactor, float saturationFactor, float detailFactor) {
     float luminance = hdrColor.Y();     // Represents the lightness or luminance of the color
     float a = hdrColor.R - hdrColor.G;  // Represents the color component along the red-green axis
     float b = hdrColor.B - hdrColor.G;  // Represents the color component along the yellow-blue axis
@@ -188,7 +189,7 @@ RGB Mantiuk_ToneMap(RGB& hdrColor, float contrastFactor, float saturationFactor,
     luminance *= detailFactor;
 
     // Convert the perceptual color back to HDR color space
-    RGB mappedColor;
+    OurRGB mappedColor;
     mappedColor.R = luminance + a;
     mappedColor.G = luminance;
     mappedColor.B = luminance + b;
@@ -205,15 +206,19 @@ void ImagePPM::ToneMap8() {
     float contrastFactor = 0.4f;    // Contrast factor
     float saturationFactor = 0.4f;  // Saturation factor
     float detailFactor = 1.0f;      // Detail factor
+
+    // float contrastFactor = 2.0f;    // Contrast factor
+    // float saturationFactor = 0.7f;  // Saturation factor
+    // float detailFactor = 1.0f;      // Detail factor
     
     // Loop over each pixel in the image, apply tone mapping, clamp, and convert to byte format
     for (int j = 0; j < H; j++) {
         for (int i = 0; i < W; ++i) {
             // Retrieve the pixel color from the HDR image
-            RGB pixelColor = imagePlane[j * W + i];
+            OurRGB pixelColor = imagePlane[j * W + i];
             
             // Apply Mantiuk tone mapping
-            RGB mappedColor = Mantiuk_ToneMap(pixelColor, contrastFactor, saturationFactor, detailFactor);
+            OurRGB mappedColor = Mantiuk_ToneMap(pixelColor, contrastFactor, saturationFactor, detailFactor);
             
             // Clamp the pixel color to ensure it stays within the valid range
             mappedColor.Clamp();
@@ -227,7 +232,6 @@ void ImagePPM::ToneMap8() {
 }
 
 
-
 bool ImagePPM::Save (std::string filename) {
     // convert from float to {0,1,..., 255}
     // ToneMap();
@@ -238,6 +242,7 @@ bool ImagePPM::Save (std::string filename) {
     // ToneMap6();
     // ToneMap7();
     ToneMap8();
+
 
     // write imageToSave to file
     std::ofstream ofs;

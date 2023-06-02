@@ -119,10 +119,10 @@ void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int 
 
     for (int y = threadId; y < H; y += numThreads) {
         for (int x = 0; x < W; x++) {
-            RGB color(0.,0.,0.);
+            OurRGB color(0.,0.,0.);
             
             for(int ss=0; ss<spp; ss++) {
-                Ray primary; Intersection isect; bool intersected; RGB this_color;
+                Ray primary; Intersection isect; bool intersected; OurRGB this_color;
                 
                 // I) AMOSTRAGEM DE MONTE CARLO DO PIXEL
                 float jitterV[2];
@@ -136,7 +136,7 @@ void RenderThread(StandardRenderer* renderer, int threadId, int numThreads, int 
                 intersected = renderer->scene->trace(primary, &isect);
 
                 // shade this intersection (shader)
-                this_color = renderer->shd->shade(intersected, isect, 0);
+                this_color = renderer->shd->shade(intersected, isect, 0, primary);
                 color += this_color;
             }
 
@@ -191,7 +191,7 @@ void StandardRenderer::RenderParallelOpenMP(int num_threads, int spp) {
                 intersected = scene->trace(primary, &isect);
 
                 // shade this intersection (shader)
-                this_color = shd->shade(intersected, isect, 0,primary);
+                this_color = shd->shade(intersected, isect, 0, primary);
                 color += this_color;
             }
 

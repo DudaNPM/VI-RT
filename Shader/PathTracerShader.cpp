@@ -6,7 +6,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
     OurRGB color(0.,0.,0.);
     
     // if no intersection, return background
-    if (!intersected){
+    if (!intersected) {
         bool hasInfinity = false;
         Light *l;
         for (auto& light: scene->lights) {
@@ -15,16 +15,16 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
                 l = light;
             }
         }
-        if (hasInfinity && depth == 0){
+        if (hasInfinity && depth == 0) {
             auto al = static_cast<InfiniteAreaLight *> (l);
                 
             Vector v = ray.dir;
-                //std::cout << v.X << " " << v.Y << " " << v.Z << std::endl;
+            // std::cout << v.X << " " << v.Y << " " << v.Z << std::endl;
             v.normalize();
             Vector theta_phi = al->dir_to_theta_phi(v);
             Vector xy = al->theta_phi_to_xy(theta_phi.X,theta_phi.Y);
             return al->bilerp(xy);
-        }else{
+        } else {
             return background;
         }
 
@@ -36,11 +36,27 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
     // get the BRDF
     Phong *f = static_cast<Phong *> (isect.f);
 
-/*
+
     // V) PARAGEM DA RECURSIVIDADE USANDO ROLETA RUSSA
     float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    if (rnd_russian < continue_p) {
+        OurRGB lcolor(0.,0.,0.);
+
+        // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
+        // random select between specular and diffuse
+        float s_p = f->Ks.Y() / (f->Ks.Y() + f->Kd.Y());
+        float rnd = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    
+        if (rnd < s_p) lcolor = specularReflection(isect, f, depth+1) / s_p;
+        else lcolor = diffuseReflection(isect, f, depth+1) / (1 - s_p);
+    
+        // russian roulette
+        color += (lcolor / continue_p);
+    }
+/*
+ float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     if (depth < MAX_DEPTH || rnd_russian < continue_p) {
-        RGB lcolor(0.,0.,0.);
+        OurRGB lcolor(0.,0.,0.);
 
         // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
         // random select between specular and diffuse
@@ -54,9 +70,9 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
         if (depth < MAX_DEPTH) color += lcolor;
         // russian roulette
         else color += (lcolor / continue_p);
-    }
-*/
+    }*/
 
+/*
     if (depth < MAX_DEPTH) {
         // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
         // random select between specular and diffuse
@@ -66,6 +82,7 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
         if (rnd < s_p) color += specularReflection(isect, f, depth+1) / s_p;
         else color += diffuseReflection(isect, f, depth+1) / (1 - s_p);
     }
+    */
     
     
     // II) AMOSTRAGEM DE MONTE CARLO DA ILUMINAÇÃO DIRETA
@@ -122,6 +139,40 @@ OurRGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
                 } // end cosL > 0.
             }
         } // end area light
+        
+        if(light->type == INFINITE_LIGHT){
+        
+            if (!f->Kd.isZero()) {
+                OurRGB L;
+                Point lpoint;
+                float l_pdf;
+                auto al = static_cast<InfiniteAreaLight *> (light);
+                float rnd[2];
+                rnd[0] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                rnd[1] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                L = al->Sample_L(rnd, &lpoint, l_pdf);
+                //std::cout << lpoint.X << " " << lpoint.Y << " " << lpoint.Z << " "<< std::endl;
+                //std::cout << "LIGHT " << L.R << " "<< L.G << " " << L.B << std::endl;
+                
+                // compute the direction from the intersection point to the light source
+                Vector Ldir = isect.p.vec2point(lpoint);
+                const float Ldistance = Ldir.norm();
+                Ldir.normalize();
+                // cosine between Ldir and the shading normal at the intersection point
+                float cosL = Ldir.dot(isect.sn);
+                
+                // shade
+                if (cosL > 0.0) { // light NOT behind primitive AND light normal points to the ray o
+                    Ray shadow(isect.p, Ldir); // generate the shadow ray
+                    shadow.adjustOrigin(isect.gn); // adjust origin EPSILON along the normal: avoid self oclusion
+                    
+                    if (scene->visibility(shadow, Ldistance-EPSILON)) { // light source not occluded
+                        color += (f->Kd * L * cosL / l_pdf);
+                        //std::cout << "LIGHT " << color.R << " "<< color.G << " " << color.B << std::endl;
+                    }
+                } // end cosL > 0.
+            }
+        }// end area light
     }
     return color;
 }
