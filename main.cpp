@@ -29,8 +29,8 @@
 using namespace std;
 using namespace std::chrono;
 
-#define NUM_THREADS 4
-#define SPP 32
+#define NUM_THREADS 6
+#define SPP 4096
 #define TINYEXR_IMPLEMENTATION
 #include "./tinyexr-release/tinyexr.h"
 
@@ -176,8 +176,8 @@ int main(int argc, const char * argv[]) {
     Shader *shd;
     bool success;
     
-    success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
-    //success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+    // success = scene.Load("C:/Users/uncha/Documents/Masters/VI/Project/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
+    success = scene.Load("C:/Users/duart/Desktop/VI/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj");
     // scene.print();
     
     if (!success) {
@@ -207,10 +207,10 @@ int main(int argc, const char * argv[]) {
     AreaLight *al06 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(486.50f,547.20f,069.90f),Point(486.50f,547.30f,139.80f),Point(417.00f,547.40f,139.80f),n);
     AreaLight *al07 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(417.00f,547.75f,489.30f),Point(417.00f,547.70f,419.40f),Point(486.50f,547.65f,419.40f),n);
     AreaLight *al08 = new AreaLight(RGB(0.1f,0.1f,0.1f),Point(486.50f,547.65f,419.40f),Point(417.00f,547.75f,489.30f),Point(486.50f,547.73f,489.30f),n);
-    *//*
+    */
     AreaLight *al09 = new AreaLight(OurRGB(0.5f,0.5f,0.5f),Point(243.25f,547.80f,314.55f),Point(243.25f,547.76f,244.65f),Point(312.75f,547.70f,244.65f),n);
     AreaLight *al10 = new AreaLight(OurRGB(0.5f,0.5f,0.5f),Point(312.75f,547.70f,244.65f),Point(312.75f,547.76f,314.75f),Point(243.25f,547.80f,314.55f),n);
-    *//*
+    /*
     scene.lights.push_back(al01); scene.numLights++;
     scene.lights.push_back(al02); scene.numLights++;
     scene.lights.push_back(al03); scene.numLights++;
@@ -220,18 +220,19 @@ int main(int argc, const char * argv[]) {
     scene.lights.push_back(al07); scene.numLights++;
     scene.lights.push_back(al08); scene.numLights++;
     */
-    //scene.lights.push_back(al09); scene.numLights++;
-    //scene.lights.push_back(al10); scene.numLights++;
+    scene.lights.push_back(al09); scene.numLights++;
+    scene.lights.push_back(al10); scene.numLights++;
 
-    Point worldCenter;
-    float worldRadius;
-    ritterBoundingSphere(scene.vertices, worldCenter, worldRadius);
-    std::cout << "worldCenter: " << worldCenter.X <<" "<< worldCenter.Y << " "<< worldCenter.Z << std::endl;
-    std::cout << "worldRadius " << worldRadius << std::endl;
-
-    HDRImageBuffer * imgEXR = load_exr("C:\\Users\\uncha\\Documents\\Masters\\VI\\Project\\VI-RT\\field.exr");
-    InfiniteAreaLight * light = new InfiniteAreaLight(imgEXR, worldCenter, worldRadius);
-    scene.lights.push_back(light);
+    // Point worldCenter;
+    // float worldRadius;
+    // ritterBoundingSphere(scene.vertices, worldCenter, worldRadius);
+    // std::cout << "worldCenter: " << worldCenter.X <<" "<< worldCenter.Y << " "<< worldCenter.Z << std::endl;
+    // std::cout << "worldRadius " << worldRadius << std::endl;
+// 
+    // // HDRImageBuffer * imgEXR = load_exr("C:\\Users\\uncha\\Documents\\Masters\\VI\\Project\\VI-RT\\field.exr");
+    // HDRImageBuffer * imgEXR = load_exr("C:/Users/duart/Desktop/VI/VI-RT/field.exr");
+    // InfiniteAreaLight * light = new InfiniteAreaLight(imgEXR, worldCenter, worldRadius);
+    // scene.lights.push_back(light);
     
     scene.printSummary();
 
@@ -247,15 +248,15 @@ int main(int argc, const char * argv[]) {
 
 
     // Camera parameters
-    const Point Eye = {280,100,-330};
-    const Point At = {280,250,0};
+    const Point Eye = {280,275,-330};
+    const Point At = {280,265,0};
     const Vector Up = {0,1,0};
     const float fovW = 3.1415f / 2.0f;
     const float fovH = fovW * H/W;
     cam = new Perspective(Eye, At, Up, W, H, fovW, fovH);
     
     // create the shader
-    OurRGB background(0.f, 0.f, 0.f);
+    OurRGB background(0.05f, 0.05f, 0.55f);
     shd = new PathTracerShader(&scene, background);
     // declare the renderer
     StandardRenderer myRender(cam, &scene, img, shd);
@@ -277,7 +278,7 @@ int main(int argc, const char * argv[]) {
     cout << "Execution time: " << duration.count() << " seconds" << endl;
 
     // save the image
-    img->Save("1sppssss_com_rr.ppm");
+    img->Save("semnoise.ppm");
     
     cout << "That's all, folks!" << endl;
     return 0;

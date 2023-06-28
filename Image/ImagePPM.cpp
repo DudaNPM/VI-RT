@@ -115,7 +115,7 @@ void ImagePPM::ToneMap6() {
     
     // Tone mapping parameters
     float key = 1.5f;  // Key value for Reinhard et al. tone mapping
-    float L_white = 1.0f;  // Maximum luminance value in the scene
+    float L_white = 0.7f;  // Maximum luminance value in the scene
     
     // Loop over each pixel in the image, apply tone mapping, clamp, and convert to byte format
     for (int j = 0; j < H; j++) {
@@ -202,14 +202,10 @@ OurRGB Mantiuk_ToneMap(OurRGB& hdrColor, float contrastFactor, float saturationF
 void ImagePPM::ToneMap8() {
     imageToSave = new PPM_pixel[W * H];
 
-    // Tone mapping parameters
+    // Tone mapping parameters - Cornel Box
     float contrastFactor = 0.4f;    // Contrast factor
     float saturationFactor = 0.4f;  // Saturation factor
     float detailFactor = 1.0f;      // Detail factor
-
-    //float contrastFactor = 2.0f;    // Contrast factor
-    //float saturationFactor = 0.7f;  // Saturation factor
-    //float detailFactor = 1.0f;      // Detail factor
     
     // Loop over each pixel in the image, apply tone mapping, clamp, and convert to byte format
     for (int j = 0; j < H; j++) {

@@ -3,7 +3,7 @@
 
 
 OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, Ray ray) {
-    OurRGB color(0.,0.,0.);
+    OurRGB color(0.0f,0.0f,0.0f);
     
     // if no intersection, return background
     if (!intersected) {
@@ -19,27 +19,27 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
             auto al = static_cast<InfiniteAreaLight *> (l);
                 
             Vector v = ray.dir;
-            // std::cout << v.X << " " << v.Y << " " << v.Z << std::endl;
             v.normalize();
             Vector theta_phi = al->dir_to_theta_phi(v);
             Vector xy = al->theta_phi_to_xy(theta_phi.X,theta_phi.Y);
-            return 10.0f * al->bilerp(xy);
+            return 4.0f * al->bilerp(xy);
         } else {
             return background;
         }
-
     }
     
     // intersection with a light source
     if (isect.isLight) return isect.power;
-    
     // get the BRDF
     Phong *f = static_cast<Phong *> (isect.f);
 
 
     // V) PARAGEM DA RECURSIVIDADE USANDO ROLETA RUSSA
-    /*
-    float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    // float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+
+// Implementação com paragem com roleta russa mas sem MAX_DEPTH
+
+/*
     if (rnd_russian < continue_p) {
         OurRGB lcolor(0.,0.,0.);
 
@@ -54,45 +54,49 @@ OurRGB PathTracerShader::shade(bool intersected, Intersection isect, int depth, 
         // russian roulette
         color += (lcolor / continue_p);
     }
-    */
+*/
+
+
+// Implementação com paragem com roleta russa mas no minimo MAX_DEPTH iterações
+
 /*
- float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    if (depth < MAX_DEPTH || rnd_russian < continue_p) {
-        OurRGB lcolor(0.,0.,0.);
+    float rnd_russian = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        if (depth < MAX_DEPTH || rnd_russian < continue_p) {
+            OurRGB lcolor(0.,0.,0.);
 
-        // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
-        // random select between specular and diffuse
-        float s_p = f->Ks.Y() / (f->Ks.Y() + f->Kd.Y());
-        float rnd = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+            // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
+            // random select between specular and diffuse
+            float s_p = f->Ks.Y() / (f->Ks.Y() + f->Kd.Y());
+            float rnd = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+        
+            if (rnd < s_p) lcolor = specularReflection(isect, f, depth+1) / s_p;
+            else lcolor = diffuseReflection(isect, f, depth+1) / (1 - s_p);
+        
+            // no russian roulette
+            if (depth < MAX_DEPTH) color += lcolor;
+            // russian roulette
+            else color += (lcolor / continue_p);
+        }
+*/
+
+
+// Implementação sem paragem com roleta russa -> apresenta melhores resultados
     
-        if (rnd < s_p) lcolor = specularReflection(isect, f, depth+1) / s_p;
-        else lcolor = diffuseReflection(isect, f, depth+1) / (1 - s_p);
-    
-        // no russian roulette
-        if (depth < MAX_DEPTH) color += lcolor;
-        // russian roulette
-        else color += (lcolor / continue_p);
-    }*/
-
-
     if (depth < MAX_DEPTH) {
         // III) AMOSTRAGEM DE MONTE CARLO DA BRDF
         // random select between specular and diffuse
-        float s_p = f->Ks.Y() / (f->Ks.Y() + f->Kd.Y());
+        float s_p = (f->Ks.Y() / (f->Ks.Y() + f->Kd.Y())) - 0.00001f;
         float rnd = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         
         if (rnd < s_p) color += specularReflection(isect, f, depth+1) / s_p;
         else color += diffuseReflection(isect, f, depth+1) / (1 - s_p);
     }
-
     
     
     // II) AMOSTRAGEM DE MONTE CARLO DA ILUMINAÇÃO DIRETA
     // if there is a diffuse component do direct light
     if (!f->Kd.isZero()) color += directLightingMonteCarlo(isect,f);
     
-    
-
     return color;
 }
 
@@ -323,7 +327,7 @@ OurRGB PathTracerShader::specularReflection(Intersection isect, Phong *f, int de
 
 OurRGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int depth) {
     Intersection d_isect;
-    OurRGB color(0.,0.,0.);
+    OurRGB color(0.0f,0.0f,0.0f);
 
     // IV) AMOSTRAGEM DE MONTE CARLO DA COMPONENTE DIFUSA
     // actual direction distributed around N: 2 random number in [0,1[
@@ -348,7 +352,7 @@ OurRGB PathTracerShader::diffuseReflection(Intersection isect, Phong *f, int dep
     
     // if light source return 0 ; handled by direct
     if (!d_isect.isLight) { // shade this intersection
-        OurRGB Rcolor = shade(intersected, d_isect, depth+1,diffuse);
+        OurRGB Rcolor = shade(intersected, d_isect, depth+1, diffuse);
         color = (f->Kd * cos_theta * Rcolor) / pdf;
     }
 
